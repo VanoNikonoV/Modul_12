@@ -9,18 +9,6 @@ namespace Modul_12.Models
 {
     public class Clients : ObservableCollection<Client>, INotifyCollectionChanged
     {
-        #region InfoChanges
-        private ObservableCollection<InformationAboutChanges> infoChanges = new ObservableCollection<InformationAboutChanges>();
-
-        public ObservableCollection<InformationAboutChanges> InfoChanges
-        {
-            get { return this.infoChanges; }
-            set
-            {
-                this.infoChanges = value;
-            }
-        }
-        #endregion
 
         public Clients() {  }
 
