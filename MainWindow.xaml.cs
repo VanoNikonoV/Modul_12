@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Modul_12.Cmds;
 using Modul_12.Models;
 using Modul_12.ViewModels;
 using System;
@@ -16,27 +17,18 @@ namespace Modul_12
 
         public MainWindowViewModel ViewModel { get; set; } = new MainWindowViewModel();
 
-
-        public Clients ClientsBank { get; set; }
-
-        public Consultant Consultant { get; set; }
-
-        public Meneger Meneger { get; set; }
-
         private bool isDirty = false;
+
+        #region Команды
+        //private ICommand _saveCommand = null;
+        //public ICommand SaveCommand => _saveCommand ?? (_saveCommand = new SaveCommand());
+        #endregion
 
         public MainWindow()
         {
-
-            ClientsBank = new Clients("data.csv");
-
-            Consultant = new Consultant();
-
-            Meneger = new Meneger();
-
             InitializeComponent();
 
-            DataClients.ItemsSource = Consultant.ViewClientsData(ClientsBank.Clone());
+            DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.Clients.Clone());
 
             #region Сокрытие не функциональных кнопок
 
@@ -79,7 +71,6 @@ namespace Modul_12
                 e.CanExecute = true;
             }
             else e.CanExecute = false;
-
         }
 
         private void SaveExecuted(object sender, ExecutedRoutedEventArgs e)
@@ -99,7 +90,7 @@ namespace Modul_12
                 }
             }
 
-            foreach (var client in ClientsBank)
+            foreach (var client in ViewModel.Clients)
             {
                 client.IsChanged = false;
             }
@@ -131,7 +122,7 @@ namespace Modul_12
                     NewClient_Button.IsEnabled = false;
                     #endregion
 
-                    DataClients.ItemsSource = Consultant.ViewClientsData(ClientsBank.Clone());
+                    DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.Clients.Clone());
 
                     break;
 
@@ -145,7 +136,7 @@ namespace Modul_12
                     NewClient_Button.IsEnabled = true;
                     #endregion
 
-                    DataClients.ItemsSource = Meneger.ViewClientsData(ClientsBank);
+                    DataClients.ItemsSource = ViewModel.Meneger.ViewClientsData(ViewModel.Clients);
 
                     break;
 
@@ -171,12 +162,12 @@ namespace Modul_12
             if (client != null)
             {
                 //изменения в коллекции клиентов
-                Consultant.EditeClient(client, EditTelefon_TextBox.Text.Trim());
+                ViewModel.Consultant.EditeClient(client, EditTelefon_TextBox.Text.Trim());
 
                 if (client.Error == String.Empty)
                 {
                     //изменения в коллекции банка, по ID клиента
-                    Client editClient = ClientsBank.First(i => i.ID == client.ID);
+                    Client editClient = ViewModel.Clients.First(i => i.ID == client.ID);
 
                     editClient.Telefon = EditTelefon_TextBox.Text.Trim();
 
@@ -216,9 +207,9 @@ namespace Modul_12
 
             if (client != null)
             {
-                Client changedClient = Meneger.EditNameClient(client, EditName_TextBox.Text.Trim());
+                Client changedClient = ViewModel.Meneger.EditNameClient(client, EditName_TextBox.Text.Trim());
 
-                ClientsBank.EditClient(ClientsBank.IndexOf(client), changedClient);
+                ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
 
                 isDirty = true;
             }
@@ -237,9 +228,9 @@ namespace Modul_12
 
             if (client != null)
             {
-                Client changedClient = Meneger.EditMiddleNameClient(client, EditMiddleName_TextBox.Text.Trim());
+                Client changedClient = ViewModel.Meneger.EditMiddleNameClient(client, EditMiddleName_TextBox.Text.Trim());
 
-                ClientsBank.EditClient(ClientsBank.IndexOf(client), changedClient);
+                ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
 
                 isDirty = true;
             }
@@ -253,9 +244,9 @@ namespace Modul_12
 
             if (client != null)
             {
-                Client changedClient = Meneger.EditSecondNameClient(client, EditSecondName_TextBox.Text.Trim());
+                Client changedClient = ViewModel.Meneger.EditSecondNameClient(client, EditSecondName_TextBox.Text.Trim());
 
-                ClientsBank.EditClient(ClientsBank.IndexOf(client), changedClient);
+                ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
 
                 isDirty = true;
             }
@@ -269,9 +260,9 @@ namespace Modul_12
 
             if (client != null)
             {
-                Client changedClient = Meneger.EditSeriesAndPassportNumberClient(client, EditSeriesAndPassportNumber_TextBox.Text.Trim());
+                Client changedClient = ViewModel.Meneger.EditSeriesAndPassportNumberClient(client, EditSeriesAndPassportNumber_TextBox.Text.Trim());
 
-                ClientsBank.EditClient(ClientsBank.IndexOf(client), changedClient);
+                ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
 
                 isDirty = true;
             }
@@ -313,7 +304,7 @@ namespace Modul_12
 
             if (_windowNewClient.DialogResult == true)
             {
-                ClientsBank.Add(_windowNewClient.NewClient);
+                ViewModel.Clients.Add(_windowNewClient.NewClient);
 
                 isDirty = true;
             }

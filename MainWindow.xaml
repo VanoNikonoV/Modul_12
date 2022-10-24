@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:local="clr-namespace:Modul_12"
+        xmlns:local="clr-namespace:Modul_12" xmlns:models="clr-namespace:Modul_12.Models" 
+        
         mc:Ignorable="d"
         Height="760" Width="1480"
         MinWidth="1280" MinHeight="700" WindowStyle="None" 
@@ -77,7 +78,7 @@
                         Executed="SaveExecuted"/>
     </Window.CommandBindings>
 
-    <Grid ShowGridLines="False" >
+    <Grid ShowGridLines="False" Cursor="IBeam" >
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
@@ -375,11 +376,13 @@
                         HorizontalAlignment="Left" 
                         VerticalAlignment="Center" 
                         Orientation="Horizontal"
-                        Margin="20 0">
+                        Margin="20 0"
+                        DataContext="{Binding ViewModel}">
 
                 <Button x:Name="Save_Button" ToolTip="Coхранить данные"
                 Background="{x:Null}" BorderBrush="{x:Null}"
-                Cursor="Hand" HorizontalAlignment="Left" Command="ApplicationCommands.Save">
+                Cursor="Hand" HorizontalAlignment="Left" 
+                        Command="ApplicationCommands.Save">
                     <materialDesign:PackIcon Kind="Floppy" 
                                      Width="25" Height="25" HorizontalAlignment="Center" 
                                      Cursor="Hand" Foreground="#DD080808"/>
