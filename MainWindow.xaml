@@ -6,6 +6,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:Modul_12"
         mc:Ignorable="d"
+        DataContext="{Binding ViewModel}"
         Height="760" Width="1480"
         MinWidth="1280" MinHeight="700" WindowStyle="None" 
         ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
@@ -108,7 +109,7 @@
                                 UpdateSourceTrigger=PropertyChanged}">
         </ListBox>
 
-        <!--Основная рабочая область-->
+        <!--Список клиентов-->
         <Grid Grid.Row="1" Grid.Column="1" Margin="15" Background="White" Cursor="IBeam">
 
             <Grid.Effect>
@@ -155,7 +156,7 @@
             </StatusBarItem>
         </StatusBar>
 
-        <!--Панель менаджера-->
+        <!--Панель с детальной информацией о клиенте-->
         <StackPanel x:Name="PanelInfo" Grid.Row="1" Grid.Column="0"
                     Margin="5 0 0 0"
                     Orientation="Vertical" 

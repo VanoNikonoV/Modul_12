@@ -2,6 +2,7 @@
 using Modul_12.Models;
 using Modul_12.ViewModels;
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,28 +16,19 @@ namespace Modul_12
     {
 
         public MainWindowViewModel ViewModel { get; set; } = new MainWindowViewModel();
+        
+        ObservableCollection<Client> ClientsBank { get; }
 
-
-        public Clients ClientsBank { get; set; }
-
-        public Consultant Consultant { get; set; }
-
-        public Meneger Meneger { get; set; }
 
         private bool isDirty = false;
 
         public MainWindow()
         {
-
-            ClientsBank = new Clients("data.csv");
-
-            Consultant = new Consultant();
-
-            Meneger = new Meneger();
-
             InitializeComponent();
 
-            DataClients.ItemsSource = Consultant.ViewClientsData(ClientsBank.Clone());
+            ClientsBank = ViewModel.Clients;
+
+            DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.Clients.Clone());
 
             #region Сокрытие не функциональных кнопок
 
@@ -131,7 +123,7 @@ namespace Modul_12
                     NewClient_Button.IsEnabled = false;
                     #endregion
 
-                    DataClients.ItemsSource = Consultant.ViewClientsData(ClientsBank.Clone());
+                    DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.Clients.Clone());
 
                     break;
 
@@ -145,7 +137,7 @@ namespace Modul_12
                     NewClient_Button.IsEnabled = true;
                     #endregion
 
-                    DataClients.ItemsSource = Meneger.ViewClientsData(ClientsBank);
+                    DataClients.ItemsSource = ViewModel.Meneger.ViewClientsData(ClientsBank);
 
                     break;
 
@@ -171,7 +163,7 @@ namespace Modul_12
             if (client != null)
             {
                 //изменения в коллекции клиентов
-                Consultant.EditeClient(client, EditTelefon_TextBox.Text.Trim());
+                ViewModel.Consultant.EditeClient(client, EditTelefon_TextBox.Text.Trim());
 
                 if (client.Error == String.Empty)
                 {
@@ -216,9 +208,9 @@ namespace Modul_12
 
             if (client != null)
             {
-                Client changedClient = Meneger.EditNameClient(client, EditName_TextBox.Text.Trim());
+                Client changedClient = ViewModel.Meneger.EditNameClient(client, EditName_TextBox.Text.Trim());
 
-                ClientsBank.EditClient(ClientsBank.IndexOf(client), changedClient);
+                ViewModel.Clients.EditClient(ClientsBank.IndexOf(client), changedClient);
 
                 isDirty = true;
             }
@@ -237,9 +229,9 @@ namespace Modul_12
 
             if (client != null)
             {
-                Client changedClient = Meneger.EditMiddleNameClient(client, EditMiddleName_TextBox.Text.Trim());
+                Client changedClient = ViewModel.Meneger.EditMiddleNameClient(client, EditMiddleName_TextBox.Text.Trim());
 
-                ClientsBank.EditClient(ClientsBank.IndexOf(client), changedClient);
+                ViewModel.Clients.EditClient(ClientsBank.IndexOf(client), changedClient);
 
                 isDirty = true;
             }
@@ -253,9 +245,9 @@ namespace Modul_12
 
             if (client != null)
             {
-                Client changedClient = Meneger.EditSecondNameClient(client, EditSecondName_TextBox.Text.Trim());
+                Client changedClient = ViewModel.Meneger.EditSecondNameClient(client, EditSecondName_TextBox.Text.Trim());
 
-                ClientsBank.EditClient(ClientsBank.IndexOf(client), changedClient);
+                ViewModel.Clients.EditClient(ClientsBank.IndexOf(client), changedClient);
 
                 isDirty = true;
             }
@@ -269,9 +261,9 @@ namespace Modul_12
 
             if (client != null)
             {
-                Client changedClient = Meneger.EditSeriesAndPassportNumberClient(client, EditSeriesAndPassportNumber_TextBox.Text.Trim());
+                Client changedClient = ViewModel.Meneger.EditSeriesAndPassportNumberClient(client, EditSeriesAndPassportNumber_TextBox.Text.Trim());
 
-                ClientsBank.EditClient(ClientsBank.IndexOf(client), changedClient);
+                ViewModel.Clients.EditClient(ClientsBank.IndexOf(client), changedClient);
 
                 isDirty = true;
             }
