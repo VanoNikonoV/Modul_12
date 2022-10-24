@@ -14,14 +14,16 @@ namespace Modul_12
 {
     public partial class MainWindow : Window
     {
-
         public MainWindowViewModel ViewModel { get; set; } = new MainWindowViewModel();
 
         private bool isDirty = false;
 
         #region Команды
-        //private ICommand _saveCommand = null;
-        //public ICommand SaveCommand => _saveCommand ?? (_saveCommand = new SaveCommand());
+        private ICommand _saveCommand = null;
+        public ICommand SaveCommand => _saveCommand ?? (_saveCommand = new SaveCommand());
+
+        private ICommand _editTelefonCommand = null;
+        public ICommand EditTelefonCommand => _editTelefonCommand ?? (_editTelefonCommand = new EditTelefonCommand());
         #endregion
 
         public MainWindow()
@@ -64,39 +66,39 @@ namespace Modul_12
             timer.Start();
         }
 
-        private void SaveCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            if (isDirty)
-            {
-                e.CanExecute = true;
-            }
-            else e.CanExecute = false;
-        }
+        //private void SaveCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        //{
+        //    if (isDirty)
+        //    {
+        //        e.CanExecute = true;
+        //    }
+        //    else e.CanExecute = false;
+        //}
 
-        private void SaveExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            var saveDlg = new SaveFileDialog { Filter = "Text files|*.csv" };
+        //private void SaveExecuted(object sender, ExecutedRoutedEventArgs e)
+        //{
+        //    var saveDlg = new SaveFileDialog { Filter = "Text files|*.csv" };
 
-            if (true == saveDlg.ShowDialog())
-            {
-                string fileName = saveDlg.FileName;
+        //    if (true == saveDlg.ShowDialog())
+        //    {
+        //        string fileName = saveDlg.FileName;
 
-                using (StreamWriter sw = new StreamWriter(fileName, false, Encoding.Unicode))
-                {
-                    foreach (var emp in DataClients.ItemsSource)
-                    {
-                        sw.WriteLine(emp.ToString());
-                    }
-                }
-            }
+        //        using (StreamWriter sw = new StreamWriter(fileName, false, Encoding.Unicode))
+        //        {
+        //            foreach (var emp in DataClients.ItemsSource)
+        //            {
+        //                sw.WriteLine(emp.ToString());
+        //            }
+        //        }
+        //    }
 
-            foreach (var client in ViewModel.Clients)
-            {
-                client.IsChanged = false;
-            }
-            // нужно как то обновить данные для консультанта
-            isDirty = false;
-        }
+        //    foreach (var client in ViewModel.Clients)
+        //    {
+        //        client.IsChanged = false;
+        //    }
+        //    // нужно как то обновить данные для консультанта
+        //    isDirty = false;
+        //}
 
         private void CloseWindows(object sender, RoutedEventArgs e)
         {
@@ -153,48 +155,48 @@ namespace Modul_12
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EditTelefon_Button(object sender, RoutedEventArgs e)
-        {
-            var client = DataClients.SelectedItem as Client;
+        //private void EditTelefon_Button(object sender, RoutedEventArgs e)
+        //{
+        //    var client = DataClients.SelectedItem as Client;
 
-            string whatChanges = string.Format(client.Telefon + @" на " + EditTelefon_TextBox.Text.Trim());
+        //    string whatChanges = string.Format(client.Telefon + @" на " + EditTelefon_TextBox.Text.Trim());
 
-            if (client != null)
-            {
-                //изменения в коллекции клиентов
-                ViewModel.Consultant.EditeClient(client, EditTelefon_TextBox.Text.Trim());
+        //    if (client != null)
+        //    {
+        //        //изменения в коллекции клиентов
+        //        ViewModel.Consultant.EditeTelefonClient(client, EditTelefon_TextBox.Text.Trim());
 
-                if (client.Error == String.Empty)
-                {
-                    //изменения в коллекции банка, по ID клиента
-                    Client editClient = ViewModel.Clients.First(i => i.ID == client.ID);
+        //        if (client.Error == String.Empty)
+        //        {
+        //            //изменения в коллекции банка, по ID клиента
+        //            Client editClient = ViewModel.Clients.First(i => i.ID == client.ID);
 
-                    editClient.Telefon = EditTelefon_TextBox.Text.Trim();
+        //            editClient.Telefon = EditTelefon_TextBox.Text.Trim();
 
-                    switch (AccessLevel_ComboBox.SelectedIndex)
-                    {
-                        case 0: //консультант
+        //            switch (AccessLevel_ComboBox.SelectedIndex)
+        //            {
+        //                case 0: //консультант
 
-                            editClient.InfoChanges.Add(new InformationAboutChanges(DateTime.Now, whatChanges, "замена", nameof(Consultant)));
+        //                    editClient.InfoChanges.Add(new InformationAboutChanges(DateTime.Now, whatChanges, "замена", nameof(Consultant)));
 
-                            break;
+        //                    break;
 
-                        case 1: //менждер
+        //                case 1: //менждер
 
-                            editClient.InfoChanges.Add(new InformationAboutChanges(DateTime.Now, whatChanges, "замена", nameof(Meneger)));
+        //                    editClient.InfoChanges.Add(new InformationAboutChanges(DateTime.Now, whatChanges, "замена", nameof(Meneger)));
 
-                            break;
+        //                    break;
 
-                        default:
-                            break;
-                    }
+        //                default:
+        //                    break;
+        //            }
 
-                    isDirty = true;
-                }
-                else { ShowStatusBarText("Исправте не корректные данные"); }
-            }
-            else ShowStatusBarText("Выберите клиента");
-        }
+        //            isDirty = true;
+        //        }
+        //        else { ShowStatusBarText("Исправте не корректные данные"); }
+        //    }
+        //    else ShowStatusBarText("Выберите клиента");
+        //}
 
         /// <summary>
         /// Метод редактирования имени клиента
@@ -284,8 +286,6 @@ namespace Modul_12
             if (temp != null)
             {
                 PanelInfo.DataContext = temp;
-
-                //СhangesClient.ItemsSource = temp.InfoChanges;
             }
         }
 
