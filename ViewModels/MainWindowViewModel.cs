@@ -9,7 +9,7 @@ namespace Modul_12.ViewModels
 {
     public class MainWindowViewModel
     {
-        public Clients Clients { get; set; }
+        readonly ClientsRepository clientsRepository;
 
         public Consultant Consultant { get; set; } 
         
@@ -17,7 +17,7 @@ namespace Modul_12.ViewModels
 
         public MainWindowViewModel()
         {
-            this.Clients = new Clients("data.csv"); //path
+            this.clientsRepository = new ClientsRepository("data.csv"); //path
 
             Consultant = new Consultant();
 
