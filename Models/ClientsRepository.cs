@@ -56,7 +56,9 @@ namespace Modul_12.Models
             clients.RemoveAt(index);
 
             clients.Insert(index, editClient);
-        }  
+        }
+
+        public List<Client> GetClients() { return clients; }
 
         /// <summary>
         /// Загружает данные о клиентах из файла data.csv

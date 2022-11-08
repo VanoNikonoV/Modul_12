@@ -1,6 +1,7 @@
 ﻿using Modul_12.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,9 @@ namespace Modul_12.ViewModels
 {
     public class MainWindowViewModel
     {
-        readonly ClientsRepository clientsRepository;
+        public ObservableCollection<Client> Clients { get; set; }
+
+        readonly ClientsRepository clientRepository;
 
         public Consultant Consultant { get; set; } 
         
@@ -17,7 +20,9 @@ namespace Modul_12.ViewModels
 
         public MainWindowViewModel()
         {
-            this.clientsRepository = new ClientsRepository("data.csv"); //path
+            this.clientRepository = new ClientsRepository("data.csv"); //path
+
+            Clients = new ObservableCollection<Client>(clientRepository.GetClients());
 
             Consultant = new Consultant();
 

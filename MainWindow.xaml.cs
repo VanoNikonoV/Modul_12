@@ -28,7 +28,7 @@ namespace Modul_12
 
             ClientsBank = ViewModel.Clients;
 
-            DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.Clients.Clone());
+            DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.Clients);
 
             #region Сокрытие не функциональных кнопок
 
