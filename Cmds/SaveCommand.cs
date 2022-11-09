@@ -1,22 +1,32 @@
 ﻿using Microsoft.Win32;
 using Modul_12.Models;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
-using System.Windows.Controls;
 
 
 namespace Modul_12.Cmds
 {
     internal class SaveCommand : CommandBase
     {
-        public override bool CanExecute(object parameter) => (parameter as Clients) != null;
+        public override bool CanExecute(object parameter) //saveData.CollectionChanged - для CanExecute
+        {
+            if ((parameter as Clients) != null)
+            {
+                foreach (var c in parameter as Clients)
+                {
+                    if (c.IsChanged == true) { return true; }
+                }
+            }
+
+            return false;
+        }
+       
 
         public override void Execute(object parameter)
         {
-            Clients saveData = parameter as Clients;
-
-            //saveData.CollectionChanged - для CanExecute
+            ObservableCollection<Client> saveData = parameter as ObservableCollection<Client>;
 
             if (saveData.Count != 0)
             {
@@ -28,22 +38,13 @@ namespace Modul_12.Cmds
 
                     using (StreamWriter sw = new StreamWriter(fileName, false, Encoding.Unicode))
                     {
-                        foreach (var emp in (Clients)parameter)
+                        foreach (var emp in saveData)
                         {
                             sw.WriteLine(emp.ToString());
                         }
                     }
                 }
             }
-
-            //foreach (var client in ClientsBank)
-            //{
-            //    client.IsChanged = false;
-            //}
-            //// нужно как то обновить данные для консультанта
-            //isDirty = false;
-
-
         }
 
 

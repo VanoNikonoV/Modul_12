@@ -14,7 +14,7 @@ namespace Modul_12
 {
     public partial class MainWindow : Window
     {
-        public MainWindowViewModel ViewModel { get; set; } = new MainWindowViewModel();
+        public MainWindowViewModel ViewModel { get; set; }
 
         private bool isDirty = false;
 
@@ -28,6 +28,8 @@ namespace Modul_12
 
         public MainWindow()
         {
+            ViewModel = ViewModel ?? new MainWindowViewModel();
+
             InitializeComponent();
 
             DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.Clients.Clone());
