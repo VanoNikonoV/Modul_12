@@ -15,7 +15,7 @@ namespace Modul_12.Models
         /// <param name="client">Клиент чей номер необходимо отредактировать</param>
         /// <param name="newData">Новый номер</param>
         /// <returns>Клент с новым номером</returns>
-        public Client EditeTelefonClient(Client client, string newTelefon)
+        public Client EditeTelefonClient( string newTelefon, Client client)
         {
             client.Telefon = newTelefon;
 

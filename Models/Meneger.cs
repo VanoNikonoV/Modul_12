@@ -17,7 +17,7 @@ namespace Modul_12.Models
 
         public new Client EditeTelefonClient(Client client, string newTelefon)
         {
-            base.EditeTelefonClient(client, newTelefon);
+            base.EditeTelefonClient(newTelefon, client);
 
             var x = client.InfoChanges[client.InfoChanges.Count-1];
 

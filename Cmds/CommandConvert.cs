@@ -10,7 +10,7 @@ namespace Modul_12.Cmds
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            Tuple<string, Client> tuple = new Tuple<string, Client> ((string)values[0], (Client)values[1]);
+            Tuple<string, Client, int> tuple = new Tuple<string, Client, int> ((string)values[0], (Client)values[1], (int)values[2]);
 
             return  tuple;
         }

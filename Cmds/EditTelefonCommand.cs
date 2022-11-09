@@ -46,7 +46,7 @@ namespace Modul_12.Cmds
             {
                 int x = clients.IndexOf(client);
 
-                Clients.EditClient(x, consultant.EditeTelefonClient(client, newNumber));
+                Clients.EditClient(x, consultant.EditeTelefonClient(newNumber, client));
             }
             //else ShowStatusBarText("Номер долже содержать 11 символов");
         }
