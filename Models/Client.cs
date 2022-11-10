@@ -74,15 +74,6 @@ namespace Modul_12.Models
                          seriesAndPassportNumber, dateTime, 
                          currentId, false);
 
-            //              : this(firstName, middleName, secondName, 
-            //                     telefon, seriesAndPassportNumber) 
-            //{
-            //    this.ID = currentId; 
-            //    --id; 
-            //    this.DateOfEntry = dateTime;
-            //    this.IsChanged = isChanged;
-            //}
-
         // для загрузки данных
         public Client(string firstName, string middleName,
                           string secondName, string telefon,
@@ -162,6 +153,7 @@ namespace Modul_12.Models
             }
         }
         public int ID { get; private set; }
+
         /// <summary>
         /// Серия и номер паспотра клиента
         /// </summary>

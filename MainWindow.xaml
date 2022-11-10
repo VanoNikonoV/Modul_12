@@ -193,8 +193,11 @@
                         Grid.Column="2" Grid.Row="1"
                         Background="Black" 
                         BorderBrush="{x:Null}"
-                        Cursor="Hand">
-                    <!--Click="EditName_Button_Clik"-->
+                        Cursor="Hand"
+                        Command="{Binding EditNameCommand, 
+                        RelativeSource={RelativeSource AncestorType=Window,Mode=FindAncestor}}"
+                        CommandParameter="{Binding ElementName=DataClients, Path=SelectedItem}">
+                   
                     <materialDesign:PackIcon Kind="Edit" Width="25" 
                                              Height="25" 
                                              HorizontalAlignment="Center"/>
@@ -230,8 +233,11 @@
                         Grid.Column="2" Grid.Row="1"
                         Background="Black" 
                         BorderBrush="{x:Null}"
-                        Cursor="Hand">
-                    <!--Click="EditMiddleName_Button_Clik">-->
+                        Cursor="Hand"
+                        Command="{Binding EditMiddleNameCommand, 
+                        RelativeSource={RelativeSource AncestorType=Window,Mode=FindAncestor}}"
+                        CommandParameter="{Binding ElementName=DataClients, Path=SelectedItem}">
+                    
                     <materialDesign:PackIcon Kind="Edit" Width="25" 
                                              Height="25" 
                                              HorizontalAlignment="Center"/>
@@ -266,8 +272,11 @@
                         Grid.Column="2" Grid.Row="1"
                         Background="Black" 
                         BorderBrush="{x:Null}"
-                        Cursor="Hand">
-                    <!--Click="EditSecondName_Button_Clik">-->
+                        Cursor="Hand"
+                        Command="{Binding EditSecondNameCommand, 
+                        RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"
+                        CommandParameter="{Binding ElementName=DataClients, Path=SelectedItem}">
+                   
                     <materialDesign:PackIcon Kind="Edit" Width="25" 
                                              Height="25" 
                                              HorizontalAlignment="Center"/>
@@ -304,8 +313,11 @@
                         Grid.Column="2" Grid.Row="1"
                         Background="Black" 
                         BorderBrush="{x:Null}"
-                        Cursor="Hand">
-                    <!--Click="EditSeriesAndPassportNumber_Button_Clik">-->
+                        Cursor="Hand"
+                        Command="{Binding EditSeriesAndPassportNumberCommand, 
+                        RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"
+                        CommandParameter="{Binding ElementName=DataClients, Path=SelectedItem}">
+
                     <materialDesign:PackIcon Kind="Edit" Width="25" 
                                              Height="25" 
                                              HorizontalAlignment="Center"/>

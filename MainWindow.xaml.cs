@@ -20,14 +20,29 @@ namespace Modul_12
         private ICommand _saveCommand = null;
         public ICommand SaveCommand => _saveCommand ?? (_saveCommand = new SaveCommand());
 
-        //private ICommand _editTelefonCommand = null;
-        //public ICommand EditTelefonCommand => _editTelefonCommand ?? (_editTelefonCommand = new EditTelefonCommand());
-
         private RelayCommand<Client> _editTelefonCommand = null;
-
-        public RelayCommand<Client> EditTelefonCommand 
-            
+        public RelayCommand<Client> EditTelefonCommand  
             => _editTelefonCommand ?? (_editTelefonCommand = new RelayCommand<Client>(EditTelefon, CanEditTelefon));
+
+        private RelayCommand<Client> editNameCommand = null;
+        public RelayCommand<Client> EditNameCommand =>
+            editNameCommand ?? (editNameCommand = new RelayCommand<Client>(EditName, CanEdit));
+
+        private RelayCommand<Client> editMiddleNameCommand = null;
+        public RelayCommand<Client> EditMiddleNameCommand =>
+            editMiddleNameCommand ?? (editMiddleNameCommand = new RelayCommand<Client>(EditMiddleName, CanEdit));
+
+        private RelayCommand<Client> editSecondNameCommand = null;
+
+        public RelayCommand<Client> EditSecondNameCommand =>
+            editSecondNameCommand ?? (editSecondNameCommand = new RelayCommand<Client>(EditSecondName, CanEdit));
+
+        private RelayCommand<Client> editSeriesAndPassportNumberCommand = null;
+        public RelayCommand<Client> EditSeriesAndPassportNumberCommand =>
+            editSeriesAndPassportNumberCommand ?? (editSeriesAndPassportNumberCommand 
+
+            = new RelayCommand<Client>(EditSeriesAndPassportNumber, CanEdit));
+
 
         #endregion
 
@@ -41,10 +56,6 @@ namespace Modul_12
 
             #region Сокрытие не функциональных кнопок
 
-            //EditName_Button.IsEnabled = false;
-            //EditMiddleName_Button.IsEnabled = false;
-            //EditSecondName_Button.IsEnabled = false;
-            //EditSeriesAndPassportNumber_Button.IsEnabled = false;
             NewClient_Button.IsEnabled = false;
             #endregion
         }
@@ -90,11 +101,9 @@ namespace Modul_12
                 case 0: //консультант
 
                     #region Сокрытие не функциональных кнопок
-                    EditName_Button.IsEnabled = false;
-                    EditMiddleName_Button.IsEnabled = false;
-                    EditSecondName_Button.IsEnabled = false;
-                    EditSeriesAndPassportNumber_Button.IsEnabled = false;
+
                     NewClient_Button.IsEnabled = false;
+
                     #endregion
 
                     DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.Clients.Clone());
@@ -103,13 +112,8 @@ namespace Modul_12
 
                 case 1: //менждер
 
-                    #region Активация функциональных кнопок   
-                    EditName_Button.IsEnabled = true;
-                    EditMiddleName_Button.IsEnabled = true;
-                    EditSecondName_Button.IsEnabled = true;
-                    EditSeriesAndPassportNumber_Button.IsEnabled = true;
+
                     NewClient_Button.IsEnabled = true;
-                    #endregion
 
                     DataClients.ItemsSource = ViewModel.Meneger.ViewClientsData(ViewModel.Clients);
 
@@ -122,137 +126,16 @@ namespace Modul_12
         }
 
         #region Редактирование данных о клиенте
-
-        /// <summary>
-        /// Метод редактирования номера телефона
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        //private void EditTelefon_Button(object sender, RoutedEventArgs e)
-        //{
-        //    var client = DataClients.SelectedItem as Client;
-
-        //    string whatChanges = string.Format(client.Telefon + @" на " + EditTelefon_TextBox.Text.Trim());
-
-        //    if (client != null)
-        //    {
-        //        //изменения в коллекции клиентов
-        //        ViewModel.Consultant.EditeTelefonClient(client, EditTelefon_TextBox.Text.Trim());
-
-        //        if (client.Error == String.Empty)
-        //        {
-        //            //изменения в коллекции банка, по ID клиента
-        //            Client editClient = ViewModel.Clients.First(i => i.ID == client.ID);
-
-        //            editClient.Telefon = EditTelefon_TextBox.Text.Trim();
-
-        //            switch (AccessLevel_ComboBox.SelectedIndex)
-        //            {
-        //                case 0: //консультант
-
-        //                    editClient.InfoChanges.Add(new InformationAboutChanges(DateTime.Now, whatChanges, "замена", nameof(Consultant)));
-
-        //                    break;
-
-        //                case 1: //менждер
-
-        //                    editClient.InfoChanges.Add(new InformationAboutChanges(DateTime.Now, whatChanges, "замена", nameof(Meneger)));
-
-        //                    break;
-
-        //                default:
-        //                    break;
-        //            }
-
-        //            isDirty = true;
-        //        }
-        //        else { ShowStatusBarText("Исправте не корректные данные"); }
-        //    }
-        //    else ShowStatusBarText("Выберите клиента");
-        //}
-
-        /// <summary>
-        /// Метод редактирования имени клиента
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        //private void EditName_Button_Clik(object sender, RoutedEventArgs e)
-        //{
-        //    var client = DataClients.SelectedItem as Client;
-
-        //    if (client != null)
-        //    {
-        //        Client changedClient = ViewModel.Meneger.EditNameClient(client, EditName_TextBox.Text.Trim());
-
-        //        ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
-
-        //        isDirty = true;
-        //    }
-
-        //    else ShowStatusBarText("Выберите клиента");
-        //}
-
-        ///// <summary>
-        ///// Метод редактирования отчества клиента
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void EditMiddleName_Button_Clik(object sender, RoutedEventArgs e)
-        //{
-        //    var client = DataClients.SelectedItem as Client;
-
-        //    if (client != null)
-        //    {
-        //        Client changedClient = ViewModel.Meneger.EditMiddleNameClient(client, EditMiddleName_TextBox.Text.Trim());
-
-        //        ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
-
-        //        isDirty = true;
-        //    }
-
-        //    else ShowStatusBarText("Выберите клиента");
-        //}
-
-        //private void EditSecondName_Button_Clik(object sender, RoutedEventArgs e)
-        //{
-        //    var client = DataClients.SelectedItem as Client;
-
-        //    if (client != null)
-        //    {
-        //        Client changedClient = ViewModel.Meneger.EditSecondNameClient(client, EditSecondName_TextBox.Text.Trim());
-
-        //        ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
-
-        //        isDirty = true;
-        //    }
-
-        //    else ShowStatusBarText("Выберите клиента");
-        //}
-
-        //private void EditSeriesAndPassportNumber_Button_Clik(object sender, RoutedEventArgs e)
-        //{
-        //    var client = DataClients.SelectedItem as Client;
-
-        //    if (client != null)
-        //    {
-        //        Client changedClient = ViewModel.Meneger.EditSeriesAndPassportNumberClient(client, EditSeriesAndPassportNumber_TextBox.Text.Trim());
-
-        //        ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
-
-        //        isDirty = true;
-        //    }
-
-        //    else ShowStatusBarText("Выберите клиента");
-        //}
-        #endregion
-
         private bool CanEditTelefon(Client client)
         {
             if (client != null) { return true; } 
             
             return false;   
         }
-
+        /// <summary>
+        /// Метод редактирования номера телефона
+        /// </summary>
+        /// <param name="client"></param>
         private void EditTelefon(Client client)
         {
             string whatChanges = string.Format(client.Telefon + @" на " + EditTelefon_TextBox.Text.Trim());
@@ -293,8 +176,65 @@ namespace Modul_12
          
         }
 
+        private bool CanEdit(Client client)
+        {
+            if (client != null && AccessLevel_ComboBox.SelectedIndex == 1) { return true; }
 
-     
+            return false;
+        }
+
+        /// <summary>
+        /// Метод редактирования имени клиента
+        /// </summary>
+        /// <param name="client"></param>
+        private void EditName(Client client)
+        {
+            if (client != null)
+            {
+                Client changedClient = ViewModel.Meneger.EditNameClient(client, EditName_TextBox.Text.Trim());
+
+                ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
+            }
+            else ShowStatusBarText("Выберите клиента");
+        }
+
+        /// <summary>
+        /// Метод редактирования отчества клиента
+        /// </summary>
+        /// <param name="client"></param>
+        private void EditMiddleName(Client client)
+        {
+            if (client != null)
+            {
+                Client changedClient = ViewModel.Meneger.EditMiddleNameClient(client, EditMiddleName_TextBox.Text.Trim());
+
+                ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
+            }
+            else ShowStatusBarText("Выберите клиента");
+        }
+
+        private void EditSecondName(Client client)
+        {
+            if (client != null)
+            {
+                Client changedClient = ViewModel.Meneger.EditSecondNameClient(client, EditSecondName_TextBox.Text.Trim());
+
+                ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
+            }
+            else ShowStatusBarText("Выберите клиента");
+        }
+
+        private void EditSeriesAndPassportNumber(Client client)
+        {
+            if (client != null)
+            {
+                Client changedClient = ViewModel.Meneger.EditSeriesAndPassportNumberClient(client, EditSeriesAndPassportNumber_TextBox.Text.Trim());
+
+                ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
+            }
+            else ShowStatusBarText("Выберите клиента");
+        }
+        #endregion
 
         /// <summary>
         /// Метод заполняющий панель данными выбранного клиента
