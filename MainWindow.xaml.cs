@@ -23,11 +23,11 @@ namespace Modul_12
         //private ICommand _editTelefonCommand = null;
         //public ICommand EditTelefonCommand => _editTelefonCommand ?? (_editTelefonCommand = new EditTelefonCommand());
 
-        private RelayCommand<Tuple<string, Client, int>> _editTelefonCommand = null;
+        private RelayCommand<Client> _editTelefonCommand = null;
 
-        public RelayCommand<Tuple<string, Client, int>> EditTelefonCommand 
+        public RelayCommand<Client> EditTelefonCommand 
             
-            => _editTelefonCommand ?? (_editTelefonCommand = new RelayCommand<Tuple<string, Client, int>>(EditTelefon, CanEditTelefon));
+            => _editTelefonCommand ?? (_editTelefonCommand = new RelayCommand<Client>(EditTelefon, CanEditTelefon));
 
         #endregion
 
@@ -41,10 +41,10 @@ namespace Modul_12
 
             #region Сокрытие не функциональных кнопок
 
-            EditName_Button.IsEnabled = false;
-            EditMiddleName_Button.IsEnabled = false;
-            EditSecondName_Button.IsEnabled = false;
-            EditSeriesAndPassportNumber_Button.IsEnabled = false;
+            //EditName_Button.IsEnabled = false;
+            //EditMiddleName_Button.IsEnabled = false;
+            //EditSecondName_Button.IsEnabled = false;
+            //EditSeriesAndPassportNumber_Button.IsEnabled = false;
             NewClient_Button.IsEnabled = false;
             #endregion
         }
@@ -246,57 +246,51 @@ namespace Modul_12
         //}
         #endregion
 
-        private bool CanEditTelefon(Tuple<string, Client, int> tuple)
+        private bool CanEditTelefon(Client client)
         {
-            if (tuple != null && tuple.Item3 == 0)
-            {
-                return true;
-
-            } 
+            if (client != null) { return true; } 
+            
             return false;   
         }
 
-        private void EditTelefon(Tuple<string, Client, int> tuple)
+        private void EditTelefon(Client client)
         {
-            var client = tuple.Item2;
-
             string whatChanges = string.Format(client.Telefon + @" на " + EditTelefon_TextBox.Text.Trim());
 
-            if (client != null)
+            //изменения в коллекции клиентов
+            ViewModel.Consultant.EditeTelefonClient(EditTelefon_TextBox.Text.Trim(), client);
+
+            if (client.Error == String.Empty)
             {
-                //изменения в коллекции клиентов
-                ViewModel.Consultant.EditeTelefonClient( EditTelefon_TextBox.Text.Trim(), client);
+                //изменения в коллекции банка, по ID клиента
+                Client editClient = ViewModel.Clients.First(i => i.ID == client.ID);
 
-                if (client.Error == String.Empty)
+                editClient.Telefon = EditTelefon_TextBox.Text.Trim();
+
+                switch (AccessLevel_ComboBox.SelectedIndex)
                 {
-                    //изменения в коллекции банка, по ID клиента
-                    Client editClient = ViewModel.Clients.First(i => i.ID == client.ID);
+                    case 0: //консультант
 
-                    editClient.Telefon = EditTelefon_TextBox.Text.Trim();
+                        editClient.InfoChanges.Add(new InformationAboutChanges(DateTime.Now, whatChanges, "замена", nameof(Consultant)));
 
-                    switch (AccessLevel_ComboBox.SelectedIndex)
-                    {
-                        case 0: //консультант
+                        break;
 
-                            editClient.InfoChanges.Add(new InformationAboutChanges(DateTime.Now, whatChanges, "замена", nameof(Consultant)));
+                    case 1: //менждер
 
-                            break;
+                        editClient.InfoChanges.Add(new InformationAboutChanges(DateTime.Now, whatChanges, "замена", nameof(Meneger)));
 
-                        case 1: //менждер
+                        break;
 
-                            editClient.InfoChanges.Add(new InformationAboutChanges(DateTime.Now, whatChanges, "замена", nameof(Meneger)));
-
-                            break;
-
-                        default:
-                            break;
-                    }
-
-               
+                    default:
+                        break;
                 }
-                else { ShowStatusBarText("Исправте не корректные данные"); }
+
+                SaveCommand.CanExecute(ViewModel.Clients);
+
             }
-            else ShowStatusBarText("Выберите клиента");
+
+            else { ShowStatusBarText("Исправте не корректные данные"); }
+         
         }
 
 

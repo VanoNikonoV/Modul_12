@@ -57,12 +57,11 @@ namespace Modul_12.Models
                             string[] line = reader.ReadLine().Split('\t');
 
                             this.Add(new Client(firstName: line[1],
-                                                    middleName: line[2],
-                                                    secondName: line[3],
-                                                       telefon: line[4],
-                                       seriesAndPassportNumber: line[5],
-                                                      dateTime: Convert.ToDateTime(line[6]),
-                                                     isChanged: false)); 
+                                               middleName: line[2],
+                                               secondName: line[3],
+                                                  telefon: line[4],
+                                  seriesAndPassportNumber: line[5],
+                                                 dateTime: Convert.ToDateTime(line[6]))); 
                         }
                     }
                    

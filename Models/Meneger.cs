@@ -15,7 +15,7 @@ namespace Modul_12.Models
             return clients;
         }
 
-        public new Client EditeTelefonClient(Client client, string newTelefon)
+        public new Client EditeTelefonClient(string newTelefon, Client client )
         {
             base.EditeTelefonClient(newTelefon, client);
 
