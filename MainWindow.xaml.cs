@@ -1,11 +1,8 @@
-﻿using Microsoft.Win32;
-using Modul_12.Cmds;
+﻿using Modul_12.Cmds;
 using Modul_12.Models;
 using Modul_12.ViewModels;
 using System;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
