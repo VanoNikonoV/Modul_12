@@ -9,7 +9,6 @@ namespace Modul_12.Models
 {
     public class Clients : ObservableCollection<Client>, INotifyCollectionChanged
     {
-
         public Clients() {  }
 
         public Clients(string path = "data.csv")  

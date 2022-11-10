@@ -12,9 +12,9 @@ namespace Modul_12.Cmds
     {
         public override bool CanExecute(object parameter) //saveData.CollectionChanged - для CanExecute
         {
-            if ((parameter as Clients) != null)
+            if ((parameter as ObservableCollection<Client>) != null)
             {
-                foreach (var c in parameter as Clients)
+                foreach (var c in parameter as ObservableCollection<Client>)
                 {
                     if (c.IsChanged == true) { return true; }
                 }

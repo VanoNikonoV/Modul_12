@@ -239,7 +239,7 @@ namespace Modul_12.Models
                 this.IsChanged = true;
 
             }
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(string.Empty));
+            
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
         #endregion
