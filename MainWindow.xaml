@@ -11,7 +11,7 @@
         Height="760" Width="1600"
         MinWidth="1280" MinHeight="700" WindowStyle="None" 
         ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
-    
+
     <Window.Resources>
 
         <cmds:CommandConver x:Key="CommandConvert"/>
@@ -75,13 +75,7 @@
 
     </Window.Resources>
 
-    <!--<Window.CommandBindings>
-        <CommandBinding Command="ApplicationCommands.Save"
-                        CanExecute="SaveCanExecute"
-                        Executed="SaveExecuted"/>
-    </Window.CommandBindings>-->
-
-    <Grid ShowGridLines="False" Cursor="IBeam" >
+    <Grid ShowGridLines="True" Cursor="IBeam" >
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
@@ -419,7 +413,7 @@
                         
                         CommandParameter="{Binding ElementName=DataClients, 
                         Path=ItemsSource}">
-                    <!--Command="ApplicationCommands.Save">-->
+                    
                     
                     <materialDesign:PackIcon Kind="Floppy" 
                                      Width="25" Height="25" HorizontalAlignment="Center" 

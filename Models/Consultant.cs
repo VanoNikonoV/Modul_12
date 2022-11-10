@@ -45,11 +45,11 @@ namespace Modul_12.Models
                            seriesAndPassportNumber: concealment,
                                           dateTime: client.DateOfEntry,
                                          currentId: client.ID,
-                                         isChanged: false);
+                                         isChanged: client.IsChanged);
 
                 temp.InfoChanges = client.InfoChanges;
 
-                temp.IsChanged = false;
+                temp.IsChanged = client.IsChanged;
 
                 clientsForConsultant.Add(temp);
             }

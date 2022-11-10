@@ -174,8 +174,11 @@ namespace Modul_12.Models
         { 
             get { return this.infoChanges; }
             set 
-            { 
+            {
+                if (infoChanges == value) return;
+               
                 this.infoChanges = value;
+
                 OnPropertyChanged(nameof(InfoChanges));
             }
         }

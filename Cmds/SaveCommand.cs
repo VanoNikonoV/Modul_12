@@ -45,8 +45,12 @@ namespace Modul_12.Cmds
                     }
                 }
             }
-        }
 
+            foreach (Client client in saveData)
+            {
+                client.IsChanged = false;
+            }
+        }
 
     }
 }

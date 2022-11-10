@@ -54,10 +54,8 @@ namespace Modul_12
 
             DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.Clients.Clone());
 
-            #region Сокрытие не функциональных кнопок
-
+            //Сокрытие не функциональных кнопок
             NewClient_Button.IsEnabled = false;
-            #endregion
         }
 
         /// <summary>
@@ -271,5 +269,6 @@ namespace Modul_12
                 SaveCommand.CanExecute(null);
             }
         }
+
     }
 }
