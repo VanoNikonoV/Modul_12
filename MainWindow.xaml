@@ -75,7 +75,7 @@
 
         <Storyboard x:Key="MenuOpen">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
-                                           Storyboard.TargetName="СhangesGride">
+                                           Storyboard.TargetName="СhangesClient">
                 <EasingDoubleKeyFrame KeyTime="0" Value="60"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="310"/>
             </DoubleAnimationUsingKeyFrames>
@@ -83,7 +83,7 @@
 
         <Storyboard x:Key="MenuClose">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
-                                           Storyboard.TargetName="СhangesGride">
+                                           Storyboard.TargetName="СhangesClient">
                 <EasingDoubleKeyFrame KeyTime="0" Value="310"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="60"/>
             </DoubleAnimationUsingKeyFrames>
@@ -113,49 +113,60 @@
         </Grid.ColumnDefinitions>
 
         <!--Список изменений-->
+        <Label x:Name="ListChanges_Label" 
+               Grid.Row="1" Grid.Column="2" 
+               Content="Список изменений" 
+               VerticalAlignment="Center" 
+               HorizontalAlignment="Center" 
+               FontSize="18">
+            <Label.LayoutTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="90"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Label.LayoutTransform>
+        </Label>
 
-        <!--Основная рабочая область-->
         <Grid x:Name="СhangesGride" Grid.Row="1" Grid.Column="2" 
-              IsSharedSizeScope="True" Background="Aqua" ShowGridLines="True">
+              IsSharedSizeScope="True"  >
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="60" SharedSizeGroup="CarLabels"/>
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            <StackPanel Background="Fuchsia" >
+            <StackPanel Orientation="Vertical">
                 <Button x:Name="ButtonCloseMenu" Height="60" Width="60" 
-                            Background="{x:Null}"
-                            BorderBrush="{x:Null}" VerticalAlignment="Top" 
-                            HorizontalAlignment="Left"
-                            Visibility="Collapsed"
-                            Click="ButtonCloseMenu_Click">
-                    <materialDesign:PackIcon Kind="ArrowLeft" 
-                                                 Foreground="#FF133B86" 
-                                                 Height="25" Width="25"/>
+                                Background="{x:Null}"
+                                BorderBrush="{x:Null}" VerticalAlignment="Top" 
+                                HorizontalAlignment="Left"
+                                Visibility="Collapsed"
+                                Click="ButtonCloseMenu_Click">
+                    <materialDesign:PackIcon Kind="ArrowRight" 
+                                                     Foreground="#FF133B86" 
+                                                     Height="25" Width="25"/>
                 </Button>
                 <Button x:Name="ButtonOpenMenu" Height="60" Width="60" 
-                            Background="{x:Null}"
-                            BorderBrush="{x:Null}" VerticalAlignment="Top" 
-                            HorizontalAlignment="Right"
-                            Click="ButtonOpenMenu_Click">
+                                Background="{x:Null}"
+                                BorderBrush="{x:Null}" VerticalAlignment="Top" 
+                                HorizontalAlignment="Right"
+                                Click="ButtonOpenMenu_Click">
                     <materialDesign:PackIcon Kind="FlipHorizontal" 
-                                                 Foreground="#FF133B86" 
-                                                 Height="25" Width="25"/>
+                                                     Foreground="#FF133B86" 
+                                                     Height="25" Width="25"/>
                 </Button>
+
+
+
             </StackPanel>
-
-            <!--<TextBlock 
-                Text="Список изменений"
-                FontSize="20"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                Margin="0,20,0,0"/>-->
-
-            <ListBox x:Name="СhangesClient" Grid.Column="0"
+            <ListBox x:Name="СhangesClient" 
                 Background="{StaticResource MyGridBrushResource}"
-                Margin="0,80,10,10"
+                Margin="0,60,0,10"
                 ItemTemplate="{StaticResource InfoChages}"
-                ItemsSource="{Binding SelectedItem.InfoChanges, ElementName=DataClients, UpdateSourceTrigger=PropertyChanged}"/>
-
+                ItemsSource="{Binding SelectedItem.InfoChanges, ElementName=DataClients, UpdateSourceTrigger=PropertyChanged}" 
+                HorizontalAlignment="Stretch"
+                Width="{Binding ColumnDefinitions/ActualWidth, ElementName=СhangesGride, Mode=OneWay}"/>
         </Grid>
+
 
         <!--Основная рабочая область-->
         <Grid Grid.Row="1" Grid.Column="1" Margin="15" Background="White" Cursor="IBeam">

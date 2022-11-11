@@ -271,12 +271,16 @@ namespace Modul_12
         {
             ButtonOpenMenu.Visibility = Visibility.Visible;
             ButtonCloseMenu.Visibility = Visibility.Collapsed;
+            СhangesClient.Visibility = Visibility.Collapsed;
+            ListChanges_Label.Visibility = Visibility.Visible;
         }
 
         private void ButtonOpenMenu_Click(object sender, RoutedEventArgs e)
         {
             ButtonOpenMenu.Visibility = Visibility.Collapsed;
             ButtonCloseMenu.Visibility = Visibility.Visible;
+            СhangesClient.Visibility = Visibility.Visible;
+            ListChanges_Label.Visibility = Visibility.Collapsed;
         }
 
     }
