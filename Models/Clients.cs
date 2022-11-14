@@ -13,7 +13,8 @@ namespace Modul_12.Models
 
         public Clients(string path = "data.csv")  
         {
-            LoadData(path);
+            //LoadData(path);
+             GetClients(50);
         }
 
         /// <summary>
@@ -81,10 +82,8 @@ namespace Modul_12.Models
 
         }
 
-        static Clients GetClients(int count)
+        private void GetClients(int count)
         {
-            Clients temp = new Clients();
-
             long telefon = 79020000000;
             long passport = 6650565461;
 
@@ -96,9 +95,88 @@ namespace Modul_12.Models
 
                 passport += random.Next(1, 500);
 
-                temp.Add(new Client($"Имя_{i}", $"Отчество_{i}", $"Фамилия_{i}", telefon.ToString(), passport.ToString()));
+                this.Add(new Client(firstNames[Clients.randomize.Next(Clients.firstNames.Length)],
+                    middleNames[Clients.randomize.Next(Clients.middleNames.Length)],
+                    secondNames[Clients.randomize.Next(Clients.secondNames.Length)], 
+                    telefon.ToString(), 
+                    passport.ToString()));
             }
-            return temp;
+            
+        }
+
+        static readonly string[] firstNames;
+
+        static readonly string[] middleNames;
+
+        static readonly string[] secondNames;
+
+        /// <summary>
+        /// Генератор псевдослучайных чисел
+        /// </summary>
+        static Random randomize;
+
+        /// <summary>
+        /// Статический конструктор, в котором "хранятся"
+        /// данные о именах и фамилиях баз данных firstNames и lastNames
+        /// </summary>
+        static Clients()
+        {
+            randomize = new Random(); 
+
+            firstNames = new string[] {
+                "Агата",
+                "Агнес",
+                "Мария",
+                "Аделина",
+                "Ольга",
+                "Людмила",
+                "Аманда",
+                "Татьяна",
+                "Вероника",
+                "Жанна",
+                "Крестина",
+                "Анжела",
+                "Маргарита"
+            };
+
+            middleNames = new string[]
+            {
+                "Ивановна",
+                "Петровна",
+                "Васильевна",
+                "Сергеевна",
+                "Дмитриевна",
+                "Владимировна",
+                "Александровна",
+                "Тимофеевна"
+                
+            };
+
+            secondNames = new string[]
+            {
+                "Иванова",
+                "Петрова",
+                "Васильева",
+                "Кузнецова",
+                "Ковалёва",
+                "Попова",
+                "Пономарёва",
+                "Дьячкова",
+                "Коновалова",
+                "Соколова",
+                "Лебедева",
+                "Соловьёва",
+                "Козлова",
+                "Волкова",
+                "Зайцева",
+                "Ершова",
+                "Карпова",
+                "Щукина",
+                "Виноградова",
+                "Цветкова",
+                "Калинина"
+            };
+
         }
 
     }

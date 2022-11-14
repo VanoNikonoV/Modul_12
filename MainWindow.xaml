@@ -14,8 +14,6 @@
 
     <Window.Resources>
 
-        <cmds:CommandConver x:Key="CommandConvert"/>
-
         <DataTemplate x:Key="CheckBox_Changed">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <CheckBox IsChecked="{Binding Path=IsChanged}" IsEnabled="False"/>
@@ -169,7 +167,7 @@
 
 
         <!--Основная рабочая область-->
-        <Grid Grid.Row="1" Grid.Column="1" Margin="15" Background="White" Cursor="IBeam">
+        <Grid Grid.Row="1" Grid.Column="1"  Background="White" Cursor="IBeam" Margin="15,15,0,15">
 
             <Grid.Effect>
                 <DropShadowEffect BlurRadius="200" ShadowDepth="10"/>
@@ -465,7 +463,7 @@
 
                 <Button x:Name="Sort_Button" ToolTip="Coртировать по алфавиту"
                 Background="{x:Null}" BorderBrush="{x:Null}"
-                Cursor="Hand" HorizontalAlignment="Left">
+                Cursor="Hand" HorizontalAlignment="Left" Click="Sort_Button_Click">
                     <materialDesign:PackIcon Kind="SortAlphabeticalDescending" 
                                      Width="25" Height="25" HorizontalAlignment="Center" 
                                      Cursor="Hand" Foreground="#DD080808"/>

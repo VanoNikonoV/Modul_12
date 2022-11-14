@@ -2,9 +2,12 @@
 using Modul_12.Models;
 using Modul_12.ViewModels;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Modul_12
@@ -17,27 +20,30 @@ namespace Modul_12
         private ICommand _saveCommand = null;
         public ICommand SaveCommand => _saveCommand ?? (_saveCommand = new SaveCommand());
 
+
         private RelayCommand<Client> _editTelefonCommand = null;
         public RelayCommand<Client> EditTelefonCommand  
             => _editTelefonCommand ?? (_editTelefonCommand = new RelayCommand<Client>(EditTelefon, CanEditTelefon));
+
 
         private RelayCommand<Client> editNameCommand = null;
         public RelayCommand<Client> EditNameCommand =>
             editNameCommand ?? (editNameCommand = new RelayCommand<Client>(EditName, CanEdit));
 
+
         private RelayCommand<Client> editMiddleNameCommand = null;
         public RelayCommand<Client> EditMiddleNameCommand =>
             editMiddleNameCommand ?? (editMiddleNameCommand = new RelayCommand<Client>(EditMiddleName, CanEdit));
 
-        private RelayCommand<Client> editSecondNameCommand = null;
 
+        private RelayCommand<Client> editSecondNameCommand = null;
         public RelayCommand<Client> EditSecondNameCommand =>
             editSecondNameCommand ?? (editSecondNameCommand = new RelayCommand<Client>(EditSecondName, CanEdit));
+
 
         private RelayCommand<Client> editSeriesAndPassportNumberCommand = null;
         public RelayCommand<Client> EditSeriesAndPassportNumberCommand =>
             editSeriesAndPassportNumberCommand ?? (editSeriesAndPassportNumberCommand 
-
             = new RelayCommand<Client>(EditSeriesAndPassportNumber, CanEdit));
 
 
@@ -48,8 +54,6 @@ namespace Modul_12
             ViewModel = ViewModel ?? new MainWindowViewModel();
 
             InitializeComponent();
-
-            DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.Clients.Clone());
 
             //Сокрытие не функциональных кнопок
             NewClient_Button.IsEnabled = false;
@@ -102,6 +106,7 @@ namespace Modul_12
                     #endregion
 
                     DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.Clients.Clone());
+                    
 
                     break;
 
@@ -283,5 +288,18 @@ namespace Modul_12
             ListChanges_Label.Visibility = Visibility.Collapsed;
         }
 
+        private void Sort_Button_Click(object sender, RoutedEventArgs e)
+        {
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(DataClients.ItemsSource);
+
+            collectionView.SortDescriptions.Add(new SortDescription("FirstName", ListSortDirection.Ascending));
+
+            DataClients.ItemsSource = collectionView;
+        }
+
+        private bool Filter(Client client)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
