@@ -1,10 +1,13 @@
-﻿using Modul_12.Cmds;
+﻿using Microsoft.Win32;
+using Modul_12.Cmds;
 using Modul_12.Models;
 using Modul_12.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,13 +19,17 @@ namespace Modul_12
     {
         public MainWindowViewModel ViewModel { get; set; }
 
+        ICollectionView collectionView { get; set; }
+
+        private bool isDirty = false;
+
         #region Команды
-        private ICommand _saveCommand = null;
-        public ICommand SaveCommand => _saveCommand ?? (_saveCommand = new SaveCommand());
+        //private ICommand _saveCommand = null;
+        //public ICommand SaveCommand => _saveCommand ?? (_saveCommand = new SaveCommand());
 
 
         private RelayCommand<Client> _editTelefonCommand = null;
-        public RelayCommand<Client> EditTelefonCommand  
+        public RelayCommand<Client> EditTelefonCommand
             => _editTelefonCommand ?? (_editTelefonCommand = new RelayCommand<Client>(EditTelefon, CanEditTelefon));
 
 
@@ -43,7 +50,7 @@ namespace Modul_12
 
         private RelayCommand<Client> editSeriesAndPassportNumberCommand = null;
         public RelayCommand<Client> EditSeriesAndPassportNumberCommand =>
-            editSeriesAndPassportNumberCommand ?? (editSeriesAndPassportNumberCommand 
+            editSeriesAndPassportNumberCommand ?? (editSeriesAndPassportNumberCommand
             = new RelayCommand<Client>(EditSeriesAndPassportNumber, CanEdit));
 
         private RelayCommand newClientAddCommand = null;
@@ -60,6 +67,8 @@ namespace Modul_12
             ViewModel = ViewModel ?? new MainWindowViewModel();
 
             InitializeComponent();
+
+            collectionView = CollectionViewSource.GetDefaultView(ViewModel.Clients);
         }
 
         /// <summary>
@@ -102,11 +111,13 @@ namespace Modul_12
             {
                 case 0: //консультант
 
-                    DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.Clients.Clone());
- 
+                    DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.Clients);//.Clone()
+
                     break;
 
                 case 1: //менждер
+
+                    collectionView.SortDescriptions.Clear();
 
                     DataClients.ItemsSource = ViewModel.Meneger.ViewClientsData(ViewModel.Clients);
 
@@ -121,9 +132,9 @@ namespace Modul_12
         #region Редактирование данных о клиенте
         private bool CanEditTelefon(Client client)
         {
-            if (client != null) { return true; } 
-            
-            return false;   
+            if (client != null) { return true; }
+
+            return false;
         }
         /// <summary>
         /// Метод редактирования номера телефона
@@ -161,12 +172,12 @@ namespace Modul_12
                         break;
                 }
 
-                SaveCommand.CanExecute(ViewModel.Clients);
+                isDirty = true;
 
             }
 
             else { ShowStatusBarText("Исправте не корректные данные"); }
-         
+
         }
 
         private bool CanEdit(Client client)
@@ -193,7 +204,9 @@ namespace Modul_12
             {
                 Client changedClient = ViewModel.Meneger.EditNameClient(client, EditName_TextBox.Text.Trim());
 
-                ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
+                ViewModel.ReplaceClient(client, changedClient);
+
+                isDirty = true;
             }
             else ShowStatusBarText("Выберите клиента");
         }
@@ -208,7 +221,9 @@ namespace Modul_12
             {
                 Client changedClient = ViewModel.Meneger.EditMiddleNameClient(client, EditMiddleName_TextBox.Text.Trim());
 
-                ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
+                ViewModel.ReplaceClient(client, changedClient);
+
+                isDirty = true;
             }
             else ShowStatusBarText("Выберите клиента");
         }
@@ -219,7 +234,9 @@ namespace Modul_12
             {
                 Client changedClient = ViewModel.Meneger.EditSecondNameClient(client, EditSecondName_TextBox.Text.Trim());
 
-                ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
+                ViewModel.ReplaceClient(client, changedClient);
+
+                isDirty = true;
             }
             else ShowStatusBarText("Выберите клиента");
         }
@@ -230,7 +247,9 @@ namespace Modul_12
             {
                 Client changedClient = ViewModel.Meneger.EditSeriesAndPassportNumberClient(client, EditSeriesAndPassportNumber_TextBox.Text.Trim());
 
-                ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
+                ViewModel.ReplaceClient(client, changedClient);
+
+                isDirty = true;
             }
             else ShowStatusBarText("Выберите клиента");
         }
@@ -264,9 +283,11 @@ namespace Modul_12
 
             if (_windowNewClient.DialogResult == true)
             {
+                ViewModel.AddClient(_windowNewClient.NewClient);
+                
                 ViewModel.Clients.Add(_windowNewClient.NewClient);
 
-                SaveCommand.CanExecute(null);
+                isDirty = true;
             }
         }
 
@@ -293,7 +314,7 @@ namespace Modul_12
         /// <param name="e"></param>
         private void Sort_Button_Click(object sender, RoutedEventArgs e)
         {
-            ICollectionView collectionView = CollectionViewSource.GetDefaultView(DataClients.ItemsSource);
+            //ICollectionView collectionView = CollectionViewSource.GetDefaultView(DataClients.ItemsSource);
 
             collectionView.SortDescriptions.Add(new SortDescription("FirstName", ListSortDirection.Ascending));
 
@@ -307,9 +328,8 @@ namespace Modul_12
         private void DeleteClient(Client client)
         {
             ViewModel.Clients.Remove(client);
-
-
         }
 
+        }
     }
 }

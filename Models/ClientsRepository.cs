@@ -7,82 +7,81 @@ using System.Windows;
 
 namespace Modul_12.Models
 {
-    public class Clients : ObservableCollection<Client>, INotifyCollectionChanged
+    public class ClientsRepository
     {
-        public Clients() {  }
+        readonly List<Client> clients;
 
-        public Clients(string path = "data.csv")  
+        public List<Client> GetClients() { return clients; }
+
+        public ClientsRepository(string path = "data.csv")  
         {
-            //LoadData(path);
-             GetClients(50);
+            clients = LoadData(path);
+
+            //clients = new List<Client>();
+                
+            //GetClientsRep(100);
         }
 
         /// <summary>
-        /// Возвращает копию коллекции
+        /// Заменяет клиента
         /// </summary>
-        /// <returns>Копия Clients</returns>
-        public Clients Clone()
+        /// <param name="curent">Редактируемый клиент</param>
+        /// <param name="editClient">Отредактированный клиент</param>
+        public void ReplaceClient(Client curent, Client editClient) //EditeClient
         {
-            var rep =  new Clients();
+            int index = clients.IndexOf(curent);
 
-            foreach (var item in this) 
+            clients.RemoveAt(index);
 
-               {  rep.Add(item); }
-
-            return rep; 
+            clients.Insert(index, editClient);
         }
 
-        /// <summary>
-        /// Заменяет клиента по указанному индексу
-        /// </summary>
-        /// <param name="index">Индекс (с нуля) элемента, который требуется заменить</param>
-        /// <param name="editClient">Отредактируемый клиент по указанному индексу</param>
-        public void EditClient(int index, Client editClient) { SetItem(index, editClient); }  //ReplaceClient
+        public void AddClient(Client newClient)
+        {
+            clients.Add(newClient);
+        }
 
         /// <summary>
         /// Загружает данные о клиентах из файла data.csv
         /// </summary>
         /// <param name="path">Путь к файлу</param>
         /// <returns></returns>
-        private void LoadData(string path)
+        private List<Client> LoadData(string path)
         {
-            try
+            List<Client> tempClients = new List<Client>();
+            
+            if (File.Exists(path))
             {
-                if (File.Exists(path))
+                using (StreamReader reader = new StreamReader(path))
                 {
-                    using (StreamReader reader = new StreamReader(path))
+                    while (!reader.EndOfStream)
                     {
-                        while (!reader.EndOfStream)
-                        {
-                            string[] line = reader.ReadLine().Split('\t');
+                        string[] line = reader.ReadLine().Split('\t');
 
-                            this.Add(new Client(firstName: line[1],
-                                               middleName: line[2],
-                                               secondName: line[3],
-                                                  telefon: line[4],
-                                  seriesAndPassportNumber: line[5],
-                                                 dateTime: Convert.ToDateTime(line[6]))); 
-                        }
+                        tempClients.Add(new Client(firstName: line[1],
+                                            middleName: line[2],
+                                            secondName: line[3],
+                                                telefon: line[4],
+                                seriesAndPassportNumber: line[5],
+                                                dateTime: Convert.ToDateTime(line[6]))); 
                     }
+                }
                    
-                }
-                else
-                {
-                    MessageBox.Show("Не найден файл с данными",
-                    caption: "Ощибка в чтении данных",
-                    MessageBoxButton.OK,
-                    icon: MessageBoxImage.Error);
-                }
-
             }
-            catch (Exception e)
+            else
             {
-                MessageBox.Show(e.ToString(), caption: "Не удалось получить данные");
+                MessageBox.Show("Не найден файл с данными",
+                caption: "Ощибка в чтении данных",
+                MessageBoxButton.OK,
+                icon: MessageBoxImage.Error);
             }
+
+            return tempClients;
 
         }
 
-        private void GetClients(int count)
+        #region Автогенерация данных
+        private void GetClientsRep(int count)
         {
             long telefon = 79020000000;
             long passport = 6650565461;
@@ -95,9 +94,9 @@ namespace Modul_12.Models
 
                 passport += random.Next(1, 500);
 
-                this.Add(new Client(firstNames[Clients.randomize.Next(Clients.firstNames.Length)],
-                    middleNames[Clients.randomize.Next(Clients.middleNames.Length)],
-                    secondNames[Clients.randomize.Next(Clients.secondNames.Length)], 
+                clients.Add(new Client(firstNames[ClientsRepository.randomize.Next(ClientsRepository.firstNames.Length)],
+                    middleNames[ClientsRepository.randomize.Next(ClientsRepository.middleNames.Length)],
+                    secondNames[ClientsRepository.randomize.Next(ClientsRepository.secondNames.Length)], 
                     telefon.ToString(), 
                     passport.ToString()));
             }
@@ -119,7 +118,7 @@ namespace Modul_12.Models
         /// Статический конструктор, в котором "хранятся"
         /// данные о именах и фамилиях баз данных firstNames и lastNames
         /// </summary>
-        static Clients()
+        static ClientsRepository()
         {
             randomize = new Random(); 
 
@@ -178,6 +177,6 @@ namespace Modul_12.Models
             };
 
         }
-
+        #endregion
     }
 }

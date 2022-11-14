@@ -88,6 +88,12 @@
         </Storyboard>
 
     </Window.Resources>
+    
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Save"
+                        CanExecute="SaveCanExecute"
+                        Executed="SaveExecuted"/>
+    </Window.CommandBindings>
 
     <Window.Triggers>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonOpenMenu">
@@ -107,7 +113,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="210"/>
             <ColumnDefinition/>
-            <ColumnDefinition Width="Auto" SharedSizeGroup="CarLabels"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
         <!--Список изменений-->
@@ -440,12 +446,13 @@
                 <Button x:Name="Save_Button" ToolTip="Coхранить данные"
                 Background="{x:Null}" BorderBrush="{x:Null}"
                 Cursor="Hand" HorizontalAlignment="Left"
+                        Command="ApplicationCommands.Save">
                         
-                    Command="{Binding SaveCommand, 
+                    <!--Command="{Binding SaveCommand, 
                     RelativeSource={RelativeSource AncestorType={x:Type Window}, 
                     Mode=FindAncestor}}"
                         
-                    CommandParameter="{Binding ItemsSource, ElementName=DataClients}">
+                    CommandParameter="{Binding ItemsSource, ElementName=DataClients}">-->
 
 
                     <materialDesign:PackIcon Kind="Floppy" 

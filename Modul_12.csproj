@@ -76,7 +76,6 @@
     </Compile>
     <Compile Include="Cmds\CommandBase.cs" />
     <Compile Include="Cmds\CommandConvert.cs" />
-    <Compile Include="Cmds\EditTelefonCommand.cs" />
     <Compile Include="Cmds\SaveCommand.cs" />
     <Compile Include="Interfases\IClientDataMonitor.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -90,7 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Client.cs" />
-    <Compile Include="Models\Clients.cs" />
+    <Compile Include="Models\ClientsRepository.cs" />
     <Compile Include="Models\Consultant.cs" />
     <Compile Include="Models\InformationAboutChanges.cs" />
     <Compile Include="Models\Meneger.cs" />
