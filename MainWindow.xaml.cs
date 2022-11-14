@@ -46,8 +46,13 @@ namespace Modul_12
             editSeriesAndPassportNumberCommand ?? (editSeriesAndPassportNumberCommand 
             = new RelayCommand<Client>(EditSeriesAndPassportNumber, CanEdit));
 
-        private RelayCommand newClientAdd = null;
-        public RelayCommand NewClientAdd => newClientAdd ?? (newClientAdd = new RelayCommand(NewClient, CanAddClient));
+        private RelayCommand newClientAddCommand = null;
+        public RelayCommand NewClientAddCommand => newClientAddCommand ?? (newClientAddCommand = new RelayCommand(NewClient, CanAddClient));
+
+
+        private RelayCommand<Client> deleteClientCommand = null;
+        public RelayCommand<Client> DeleteClientCommand => deleteClientCommand ?? (deleteClientCommand = new RelayCommand<Client>(DeleteClient, CanEdit));
+
         #endregion
 
         public MainWindow()
@@ -293,6 +298,15 @@ namespace Modul_12
             collectionView.SortDescriptions.Add(new SortDescription("FirstName", ListSortDirection.Ascending));
 
             DataClients.ItemsSource = collectionView;
+        }
+
+        /// <summary>
+        /// Удаление клиента
+        /// </summary>
+        /// <param name="client">Удаляемый клиент</param>
+        private void DeleteClient(Client client)
+        {
+            ViewModel.Clients.Remove(client);
         }
 
     }

@@ -457,7 +457,7 @@
                 <Button x:Name="NewClient_Button" ToolTip="Добавить нового клиента"
                         Background="{x:Null}" BorderBrush="{x:Null}"
                         Cursor="Hand" HorizontalAlignment="Left"
-                        Command="{Binding NewClientAdd, 
+                        Command="{Binding NewClientAddCommand, 
                         RelativeSource={RelativeSource AncestorType=Window, 
                         Mode=FindAncestor}}">
                     <materialDesign:PackIcon Kind="PlusBox" 
@@ -470,6 +470,19 @@
                 Cursor="Hand" HorizontalAlignment="Left" 
                     Click="Sort_Button_Click">
                     <materialDesign:PackIcon Kind="SortAlphabeticalDescending" 
+                                     Width="25" Height="25" HorizontalAlignment="Center" 
+                                     Cursor="Hand" Foreground="#DD080808"/>
+                </Button>
+
+                <Button x:Name="DelitClient_Button" ToolTip="Удалить клиента"
+                Background="{x:Null}" BorderBrush="{x:Null}"
+                Cursor="Hand" HorizontalAlignment="Left" 
+                    Command="{Binding DeleteClientCommand, 
+                    RelativeSource={RelativeSource AncestorType=Window, 
+                    Mode=FindAncestor}}"
+                    CommandParameter="{Binding ElementName=DataClients, 
+                    Path= SelectedItem}">
+                    <materialDesign:PackIcon Kind="Delete" 
                                      Width="25" Height="25" HorizontalAlignment="Center" 
                                      Cursor="Hand" Foreground="#DD080808"/>
                 </Button>
