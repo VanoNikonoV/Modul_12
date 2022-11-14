@@ -9,11 +9,19 @@ namespace Modul_12.ViewModels
 {
     public class MainWindowViewModel
     {
-        public Clients Clients { get; set; } = new Clients();
+        public Clients Clients { get; set; }
+
+        public Consultant Consultant { get; set; }
+
+        public Meneger Meneger { get; set; }     
 
         public MainWindowViewModel()
         {
+            Clients = new Clients("data.csv");
 
+            Consultant = new Consultant();
+
+            Meneger = new Meneger();
         }
     }
 }

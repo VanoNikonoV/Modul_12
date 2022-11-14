@@ -15,7 +15,7 @@ namespace Modul_12.Models
         /// <param name="client">Клиент чей номер необходимо отредактировать</param>
         /// <param name="newData">Новый номер</param>
         /// <returns>Клент с новым номером</returns>
-        public Client EditeClient(Client client, string newTelefon)
+        public Client EditeTelefonClient(string newTelefon, Client client)
         {
             client.Telefon = newTelefon;
 
@@ -43,11 +43,13 @@ namespace Modul_12.Models
                                         secondName: client.SecondName,
                                            telefon: client.Telefon,
                            seriesAndPassportNumber: concealment,
-                                         currentId: client.ID,
                                           dateTime: client.DateOfEntry,
-                                         isChanged: false);
+                                         currentId: client.ID,
+                                         isChanged: client.IsChanged);
 
                 temp.InfoChanges = client.InfoChanges;
+
+                temp.IsChanged = client.IsChanged;
 
                 clientsForConsultant.Add(temp);
             }

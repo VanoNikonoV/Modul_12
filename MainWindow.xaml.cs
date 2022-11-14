@@ -1,51 +1,65 @@
-﻿using Microsoft.Win32;
+﻿using Modul_12.Cmds;
 using Modul_12.Models;
 using Modul_12.ViewModels;
 using System;
-using System.IO;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Modul_12
 {
     public partial class MainWindow : Window
     {
+        public MainWindowViewModel ViewModel { get; set; }
 
-        public MainWindowViewModel ViewModel { get; set; } = new MainWindowViewModel();
+        #region Команды
+        private ICommand _saveCommand = null;
+        public ICommand SaveCommand => _saveCommand ?? (_saveCommand = new SaveCommand());
 
 
-        public Clients ClientsBank { get; set; }
+        private RelayCommand<Client> _editTelefonCommand = null;
+        public RelayCommand<Client> EditTelefonCommand  
+            => _editTelefonCommand ?? (_editTelefonCommand = new RelayCommand<Client>(EditTelefon, CanEditTelefon));
 
-        public Consultant Consultant { get; set; }
 
-        public Meneger Meneger { get; set; }
+        private RelayCommand<Client> editNameCommand = null;
+        public RelayCommand<Client> EditNameCommand =>
+            editNameCommand ?? (editNameCommand = new RelayCommand<Client>(EditName, CanEdit));
 
-        private bool isDirty = false;
+
+        private RelayCommand<Client> editMiddleNameCommand = null;
+        public RelayCommand<Client> EditMiddleNameCommand =>
+            editMiddleNameCommand ?? (editMiddleNameCommand = new RelayCommand<Client>(EditMiddleName, CanEdit));
+
+
+        private RelayCommand<Client> editSecondNameCommand = null;
+        public RelayCommand<Client> EditSecondNameCommand =>
+            editSecondNameCommand ?? (editSecondNameCommand = new RelayCommand<Client>(EditSecondName, CanEdit));
+
+
+        private RelayCommand<Client> editSeriesAndPassportNumberCommand = null;
+        public RelayCommand<Client> EditSeriesAndPassportNumberCommand =>
+            editSeriesAndPassportNumberCommand ?? (editSeriesAndPassportNumberCommand 
+            = new RelayCommand<Client>(EditSeriesAndPassportNumber, CanEdit));
+
+        private RelayCommand newClientAddCommand = null;
+        public RelayCommand NewClientAddCommand => newClientAddCommand ?? (newClientAddCommand = new RelayCommand(NewClient, CanAddClient));
+
+
+        private RelayCommand<Client> deleteClientCommand = null;
+        public RelayCommand<Client> DeleteClientCommand => deleteClientCommand ?? (deleteClientCommand = new RelayCommand<Client>(DeleteClient, CanEdit));
+
+        #endregion
 
         public MainWindow()
         {
-
-            ClientsBank = new Clients("data.csv");
-
-            Consultant = new Consultant();
-
-            Meneger = new Meneger();
+            ViewModel = ViewModel ?? new MainWindowViewModel();
 
             InitializeComponent();
-
-            DataClients.ItemsSource = Consultant.ViewClientsData(ClientsBank.Clone());
-
-            #region Сокрытие не функциональных кнопок
-
-            EditName_Button.IsEnabled = false;
-            EditMiddleName_Button.IsEnabled = false;
-            EditSecondName_Button.IsEnabled = false;
-            EditSeriesAndPassportNumber_Button.IsEnabled = false;
-            NewClient_Button.IsEnabled = false;
-            #endregion
         }
 
         /// <summary>
@@ -72,41 +86,6 @@ namespace Modul_12
             timer.Start();
         }
 
-        private void SaveCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            if (isDirty)
-            {
-                e.CanExecute = true;
-            }
-            else e.CanExecute = false;
-
-        }
-
-        private void SaveExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            var saveDlg = new SaveFileDialog { Filter = "Text files|*.csv" };
-
-            if (true == saveDlg.ShowDialog())
-            {
-                string fileName = saveDlg.FileName;
-
-                using (StreamWriter sw = new StreamWriter(fileName, false, Encoding.Unicode))
-                {
-                    foreach (var emp in DataClients.ItemsSource)
-                    {
-                        sw.WriteLine(emp.ToString());
-                    }
-                }
-            }
-
-            foreach (var client in ClientsBank)
-            {
-                client.IsChanged = false;
-            }
-            // нужно как то обновить данные для консультанта
-            isDirty = false;
-        }
-
         private void CloseWindows(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
@@ -123,29 +102,13 @@ namespace Modul_12
             {
                 case 0: //консультант
 
-                    #region Сокрытие не функциональных кнопок
-                    EditName_Button.IsEnabled = false;
-                    EditMiddleName_Button.IsEnabled = false;
-                    EditSecondName_Button.IsEnabled = false;
-                    EditSeriesAndPassportNumber_Button.IsEnabled = false;
-                    NewClient_Button.IsEnabled = false;
-                    #endregion
-
-                    DataClients.ItemsSource = Consultant.ViewClientsData(ClientsBank.Clone());
-
+                    DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.Clients.Clone());
+ 
                     break;
 
                 case 1: //менждер
 
-                    #region Активация функциональных кнопок   
-                    EditName_Button.IsEnabled = true;
-                    EditMiddleName_Button.IsEnabled = true;
-                    EditSecondName_Button.IsEnabled = true;
-                    EditSeriesAndPassportNumber_Button.IsEnabled = true;
-                    NewClient_Button.IsEnabled = true;
-                    #endregion
-
-                    DataClients.ItemsSource = Meneger.ViewClientsData(ClientsBank);
+                    DataClients.ItemsSource = ViewModel.Meneger.ViewClientsData(ViewModel.Clients);
 
                     break;
 
@@ -156,129 +119,121 @@ namespace Modul_12
         }
 
         #region Редактирование данных о клиенте
-
+        private bool CanEditTelefon(Client client)
+        {
+            if (client != null) { return true; } 
+            
+            return false;   
+        }
         /// <summary>
         /// Метод редактирования номера телефона
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EditTelefon_Button(object sender, RoutedEventArgs e)
+        /// <param name="client"></param>
+        private void EditTelefon(Client client)
         {
-            var client = DataClients.SelectedItem as Client;
-
             string whatChanges = string.Format(client.Telefon + @" на " + EditTelefon_TextBox.Text.Trim());
 
-            if (client != null)
+            //изменения в коллекции клиентов
+            ViewModel.Consultant.EditeTelefonClient(EditTelefon_TextBox.Text.Trim(), client);
+
+            if (client.Error == String.Empty)
             {
-                //изменения в коллекции клиентов
-                Consultant.EditeClient(client, EditTelefon_TextBox.Text.Trim());
+                //изменения в коллекции банка, по ID клиента
+                Client editClient = ViewModel.Clients.First(i => i.ID == client.ID);
 
-                if (client.Error == String.Empty)
+                editClient.Telefon = EditTelefon_TextBox.Text.Trim();
+
+                switch (AccessLevel_ComboBox.SelectedIndex)
                 {
-                    //изменения в коллекции банка, по ID клиента
-                    Client editClient = ClientsBank.First(i => i.ID == client.ID);
+                    case 0: //консультант
 
-                    editClient.Telefon = EditTelefon_TextBox.Text.Trim();
+                        editClient.InfoChanges.Add(new InformationAboutChanges(DateTime.Now, whatChanges, "замена", nameof(Consultant)));
 
-                    switch (AccessLevel_ComboBox.SelectedIndex)
-                    {
-                        case 0: //консультант
+                        break;
 
-                            editClient.InfoChanges.Add(new InformationAboutChanges(DateTime.Now, whatChanges, "замена", nameof(Consultant)));
+                    case 1: //менждер
 
-                            break;
+                        editClient.InfoChanges.Add(new InformationAboutChanges(DateTime.Now, whatChanges, "замена", nameof(Meneger)));
 
-                        case 1: //менждер
+                        break;
 
-                            editClient.InfoChanges.Add(new InformationAboutChanges(DateTime.Now, whatChanges, "замена", nameof(Meneger)));
-
-                            break;
-
-                        default:
-                            break;
-                    }
-
-                    isDirty = true;
+                    default:
+                        break;
                 }
-                else { ShowStatusBarText("Исправте не корректные данные"); }
+
+                SaveCommand.CanExecute(ViewModel.Clients);
+
             }
-            else ShowStatusBarText("Выберите клиента");
+
+            else { ShowStatusBarText("Исправте не корректные данные"); }
+         
+        }
+
+        private bool CanEdit(Client client)
+        {
+            if (client != null && AccessLevel_ComboBox.SelectedIndex == 1) { return true; }
+
+            return false;
+        }
+
+        private bool CanAddClient()
+        {
+            if (AccessLevel_ComboBox.SelectedIndex == 1) { return true; }
+
+            return false;
         }
 
         /// <summary>
         /// Метод редактирования имени клиента
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EditName_Button_Clik(object sender, RoutedEventArgs e)
+        /// <param name="client"></param>
+        private void EditName(Client client)
         {
-            var client = DataClients.SelectedItem as Client;
-
             if (client != null)
             {
-                Client changedClient = Meneger.EditNameClient(client, EditName_TextBox.Text.Trim());
+                Client changedClient = ViewModel.Meneger.EditNameClient(client, EditName_TextBox.Text.Trim());
 
-                ClientsBank.EditClient(ClientsBank.IndexOf(client), changedClient);
-
-                isDirty = true;
+                ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
             }
-
             else ShowStatusBarText("Выберите клиента");
         }
 
         /// <summary>
         /// Метод редактирования отчества клиента
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EditMiddleName_Button_Clik(object sender, RoutedEventArgs e)
+        /// <param name="client"></param>
+        private void EditMiddleName(Client client)
         {
-            var client = DataClients.SelectedItem as Client;
-
             if (client != null)
             {
-                Client changedClient = Meneger.EditMiddleNameClient(client, EditMiddleName_TextBox.Text.Trim());
+                Client changedClient = ViewModel.Meneger.EditMiddleNameClient(client, EditMiddleName_TextBox.Text.Trim());
 
-                ClientsBank.EditClient(ClientsBank.IndexOf(client), changedClient);
-
-                isDirty = true;
+                ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
             }
-
             else ShowStatusBarText("Выберите клиента");
         }
 
-        private void EditSecondName_Button_Clik(object sender, RoutedEventArgs e)
+        private void EditSecondName(Client client)
         {
-            var client = DataClients.SelectedItem as Client;
-
             if (client != null)
             {
-                Client changedClient = Meneger.EditSecondNameClient(client, EditSecondName_TextBox.Text.Trim());
+                Client changedClient = ViewModel.Meneger.EditSecondNameClient(client, EditSecondName_TextBox.Text.Trim());
 
-                ClientsBank.EditClient(ClientsBank.IndexOf(client), changedClient);
-
-                isDirty = true;
+                ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
             }
-
             else ShowStatusBarText("Выберите клиента");
         }
 
-        private void EditSeriesAndPassportNumber_Button_Clik(object sender, RoutedEventArgs e)
+        private void EditSeriesAndPassportNumber(Client client)
         {
-            var client = DataClients.SelectedItem as Client;
-
             if (client != null)
             {
-                Client changedClient = Meneger.EditSeriesAndPassportNumberClient(client, EditSeriesAndPassportNumber_TextBox.Text.Trim());
+                Client changedClient = ViewModel.Meneger.EditSeriesAndPassportNumberClient(client, EditSeriesAndPassportNumber_TextBox.Text.Trim());
 
-                ClientsBank.EditClient(ClientsBank.IndexOf(client), changedClient);
-
-                isDirty = true;
+                ViewModel.Clients.EditClient(ViewModel.Clients.IndexOf(client), changedClient);
             }
-
             else ShowStatusBarText("Выберите клиента");
         }
-
         #endregion
 
         /// <summary>
@@ -293,17 +248,13 @@ namespace Modul_12
             if (temp != null)
             {
                 PanelInfo.DataContext = temp;
-
-                //СhangesClient.ItemsSource = temp.InfoChanges;
             }
         }
 
         /// <summary>
         /// Метод добавления нового клиенита
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void NewClient_Button_Click(object sender, RoutedEventArgs e)
+        private void NewClient( )
         {
             NewClientWindow _windowNewClient = new NewClientWindow();
 
@@ -313,10 +264,52 @@ namespace Modul_12
 
             if (_windowNewClient.DialogResult == true)
             {
-                ClientsBank.Add(_windowNewClient.NewClient);
+                ViewModel.Clients.Add(_windowNewClient.NewClient);
 
-                isDirty = true;
+                SaveCommand.CanExecute(null);
             }
         }
+
+        private void ButtonCloseMenu_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonOpenMenu.Visibility = Visibility.Visible;
+            ButtonCloseMenu.Visibility = Visibility.Collapsed;
+            СhangesClient.Visibility = Visibility.Collapsed;
+            ListChanges_Label.Visibility = Visibility.Visible;
+        }
+
+        private void ButtonOpenMenu_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonOpenMenu.Visibility = Visibility.Collapsed;
+            ButtonCloseMenu.Visibility = Visibility.Visible;
+            СhangesClient.Visibility = Visibility.Visible;
+            ListChanges_Label.Visibility = Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// Производит сортировку по алфавиту по имени клиента
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Sort_Button_Click(object sender, RoutedEventArgs e)
+        {
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(DataClients.ItemsSource);
+
+            collectionView.SortDescriptions.Add(new SortDescription("FirstName", ListSortDirection.Ascending));
+
+            DataClients.ItemsSource = collectionView;
+        }
+
+        /// <summary>
+        /// Удаление клиента
+        /// </summary>
+        /// <param name="client">Удаляемый клиент</param>
+        private void DeleteClient(Client client)
+        {
+            ViewModel.Clients.Remove(client);
+
+
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using Modul_12.Models;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 
@@ -8,11 +9,25 @@ namespace Modul_12.Cmds
 {
     internal class SaveCommand : CommandBase
     {
-        public override bool CanExecute(object parameter) => (parameter as Clients) != null;
+        public override bool CanExecute(object parameter) //saveData.CollectionChanged - для CanExecute
+        {
+            if ((parameter as ObservableCollection<Client>) != null)
+            {
+                foreach (var c in parameter as ObservableCollection<Client>)
+                {
+                    if (c.IsChanged == true) { return true; }
+                }
+            }
+
+            return false;
+        }
+       
 
         public override void Execute(object parameter)
         {
-            if (parameter is Clients)
+            ObservableCollection<Client> saveData = parameter as ObservableCollection<Client>;
+
+            if (saveData.Count != 0)
             {
                 var saveDlg = new SaveFileDialog { Filter = "Text files|*.csv" };
 
@@ -22,7 +37,7 @@ namespace Modul_12.Cmds
 
                     using (StreamWriter sw = new StreamWriter(fileName, false, Encoding.Unicode))
                     {
-                        foreach (var emp in (Clients)parameter)
+                        foreach (var emp in saveData)
                         {
                             sw.WriteLine(emp.ToString());
                         }
@@ -30,7 +45,11 @@ namespace Modul_12.Cmds
                 }
             }
 
-            
+            foreach (Client client in saveData)
+            {
+                client.IsChanged = false;
+            }
         }
+
     }
 }

@@ -62,30 +62,29 @@ namespace Modul_12.Models
                           string secondName, string telefon,
                           string seriesAndPassportNumber, 
                           int currentId, DateTime dateTime, 
-                          bool isChanged)
+                          bool isChanged) =>
 
-                          : this(firstName, middleName, secondName, 
-                                 telefon, seriesAndPassportNumber) 
-            {
-                this.ID = currentId; 
-                --id; 
-                this.DateOfEntry = dateTime;
-                this.IsChanged = isChanged;
-            }
+                         (this.FirstName, this.MiddleName,
+                         this.SecondName, this.Telefon,
+                         this.SeriesAndPassportNumber, this.DateOfEntry,
+                         this.ID, this.IsChanged) =
+                             
+                         (firstName, middleName,
+                         secondName, telefon,
+                         seriesAndPassportNumber, dateTime, 
+                         currentId, false);
 
         // для загрузки данных
         public Client(string firstName, string middleName,
                           string secondName, string telefon,
                           string seriesAndPassportNumber,
-                          DateTime dateTime,
-                          bool isChanged)
+                          DateTime dateTime)
 
                           : this(firstName, middleName, secondName,
                                  telefon, seriesAndPassportNumber)
         {
-
             this.DateOfEntry = dateTime;
-            this.IsChanged = isChanged;
+            this.IsChanged = false;
         }
 
         /// <summary>
@@ -94,10 +93,15 @@ namespace Modul_12.Models
         public string FirstName
         {
             get { return this.firstName; }
+
             private set
             {
+                if (this.firstName == value) return;
+
                     this.firstName = value;
+
                     OnPropertyChanged(nameof(FirstName));
+                   
             }
         }
         /// <summary>
@@ -106,9 +110,15 @@ namespace Modul_12.Models
         public string MiddleName
         {
             get { return this.middleName; }
+
             private set
-            { this.middleName = value;
-                OnPropertyChanged(nameof(MiddleName)); }
+            {
+                if (middleName == value) return;
+                
+                this.middleName = value;
+
+                OnPropertyChanged(nameof(MiddleName)); 
+            }
         }
         /// <summary>
         /// Фамилия клиента
@@ -117,8 +127,14 @@ namespace Modul_12.Models
         {
             get { return this.secondName; }
 
-            private set { this.secondName = value;
-                  OnPropertyChanged(nameof(SecondName));}
+            private set 
+            {
+                if (secondName == value) return;
+               
+                this.secondName = value;
+
+                OnPropertyChanged(nameof(SecondName));
+            }
         }
         /// <summary>
         /// Телефон клиента
@@ -129,11 +145,15 @@ namespace Modul_12.Models
 
             set
             {
+                if (telefon == value) return;
+           
                 this.telefon = value;
+
                 OnPropertyChanged(nameof(Telefon));
             }
         }
         public int ID { get; private set; }
+
         /// <summary>
         /// Серия и номер паспотра клиента
         /// </summary>
@@ -154,8 +174,11 @@ namespace Modul_12.Models
         { 
             get { return this.infoChanges; }
             set 
-            { 
+            {
+                if (infoChanges == value) return;
+               
                 this.infoChanges = value;
+
                 OnPropertyChanged(nameof(InfoChanges));
             }
         }
@@ -216,7 +239,7 @@ namespace Modul_12.Models
                 this.IsChanged = true;
 
             }
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(string.Empty));
+            
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
         #endregion

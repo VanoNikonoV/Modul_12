@@ -4,14 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:local="clr-namespace:Modul_12"
+        xmlns:local="clr-namespace:Modul_12" 
+        xmlns:models="clr-namespace:Modul_12.Models" 
+        xmlns:cmds="clr-namespace:Modul_12.Cmds" 
         mc:Ignorable="d"
-        Height="760" Width="1480"
-        MinWidth="1280" MinHeight="700" WindowStyle="None" 
-        ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
-    
+        Height="760" Width="1450"
+        MinHeight="700" WindowStyle="None" 
+        WindowStartupLocation="CenterScreen">
+
     <Window.Resources>
-        
+
         <DataTemplate x:Key="CheckBox_Changed">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <CheckBox IsChecked="{Binding Path=IsChanged}" IsEnabled="False"/>
@@ -69,15 +71,34 @@
             </DrawingBrush.Drawing>
         </DrawingBrush>
 
+        <Storyboard x:Key="MenuOpen">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
+                                           Storyboard.TargetName="СhangesClient">
+                <EasingDoubleKeyFrame KeyTime="0" Value="60"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="310"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Key="MenuClose">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)"
+                                           Storyboard.TargetName="СhangesClient">
+                <EasingDoubleKeyFrame KeyTime="0" Value="310"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="60"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
     </Window.Resources>
 
-    <Window.CommandBindings>
-        <CommandBinding Command="ApplicationCommands.Save"
-                        CanExecute="SaveCanExecute"
-                        Executed="SaveExecuted"/>
-    </Window.CommandBindings>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonOpenMenu">
+            <BeginStoryboard Storyboard="{StaticResource MenuOpen}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonCloseMenu">
+            <BeginStoryboard Storyboard="{StaticResource MenuClose}"/>
+        </EventTrigger>
+    </Window.Triggers>
 
-    <Grid ShowGridLines="False" >
+    <Grid ShowGridLines="False"  Cursor="IBeam" >
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
@@ -85,54 +106,90 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="210"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="310"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="CarLabels"/>
         </Grid.ColumnDefinitions>
 
         <!--Список изменений-->
-        <TextBlock Grid.Row="1" Grid.Column="2"
-                   Text="Список изменений"
-                   FontSize="20"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Top"
-                   Margin="0,20,0,0">
-        </TextBlock>
+        <Label x:Name="ListChanges_Label" 
+               Grid.Row="1" Grid.Column="2" 
+               Content="Список изменений" 
+               VerticalAlignment="Center" 
+               HorizontalAlignment="Center" 
+               FontSize="18">
+            <Label.LayoutTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="90"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Label.LayoutTransform>
+        </Label>
 
-        <ListBox x:Name="СhangesClient"
-                 Grid.Row="1" Grid.Column="2"
-                 Background="{StaticResource MyGridBrushResource}"
-                 Margin="0,80,10,10"
-                 ItemTemplate="{StaticResource InfoChages}"
-                 ItemsSource="{Binding ElementName=DataClients, 
-                                Path=SelectedItem.InfoChanges,
-                                UpdateSourceTrigger=PropertyChanged}">
-        </ListBox>
+        <Grid x:Name="СhangesGride" Grid.Row="1" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Vertical">
+                <Button x:Name="ButtonCloseMenu" Height="60" Width="60" 
+                                Background="{x:Null}"
+                                BorderBrush="{x:Null}" VerticalAlignment="Top" 
+                                HorizontalAlignment="Left"
+                                Visibility="Collapsed"
+                                Click="ButtonCloseMenu_Click">
+                    <materialDesign:PackIcon Kind="ArrowRight" 
+                                                     Foreground="#FF133B86" 
+                                                     Height="25" Width="25"/>
+                </Button>
+                <Button x:Name="ButtonOpenMenu" Height="60" Width="60" 
+                                Background="{x:Null}"
+                                BorderBrush="{x:Null}" VerticalAlignment="Top" 
+                                HorizontalAlignment="Right"
+                                Click="ButtonOpenMenu_Click">
+                    <materialDesign:PackIcon Kind="FlipHorizontal" 
+                                                     Foreground="#FF133B86" 
+                                                     Height="25" Width="25"/>
+                </Button>
+
+
+
+            </StackPanel>
+            <ListBox x:Name="СhangesClient" 
+                Background="{StaticResource MyGridBrushResource}"
+                Margin="0,60,0,10"
+                ItemTemplate="{StaticResource InfoChages}"
+                ItemsSource="{Binding SelectedItem.InfoChanges, ElementName=DataClients, UpdateSourceTrigger=PropertyChanged}" 
+                HorizontalAlignment="Stretch"
+                Width="{Binding ColumnDefinitions/ActualWidth, ElementName=СhangesGride, Mode=OneWay}"/>
+        </Grid>
+
 
         <!--Основная рабочая область-->
-        <Grid Grid.Row="1" Grid.Column="1" Margin="15" Background="White" Cursor="IBeam">
-
+        <Grid Grid.Row="1" Grid.Column="1"  Background="White" Cursor="IBeam" Margin="15,15,0,15">
+            
             <Grid.Effect>
                 <DropShadowEffect BlurRadius="200" ShadowDepth="10"/>
             </Grid.Effect>
 
-            <ListView x:Name="DataClients" FontSize="18" Cursor="IBeam"
+            <ListView x:Name="DataClients" FontSize="18" Cursor="IBeam" 
                       SelectionChanged="ClientViewSelection" Grid.ColumnSpan="2">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="№" 
-                                        DisplayMemberBinding="{Binding Path = ID}"/>
+                                        DisplayMemberBinding="{Binding ID}"/>
                         <GridViewColumn Header="Имя" 
-                                        DisplayMemberBinding="{Binding Path = FirstName}"/>
+                                        DisplayMemberBinding="{Binding FirstName}"/>
                         <GridViewColumn Header="Отчество" 
-                                        DisplayMemberBinding="{Binding Path = MiddleName}"/>
+                                        DisplayMemberBinding="{Binding MiddleName}"/>
                         <GridViewColumn Header="Фамилия" 
-                                        DisplayMemberBinding="{Binding Path = SecondName}"/>
-                        <GridViewColumn x:Name="Passport" Header="Паспортные данные"  Width ="160"
-                                        DisplayMemberBinding="{Binding Path= SeriesAndPassportNumber}"/>
+                                        DisplayMemberBinding="{Binding SecondName}"/>
+                        <GridViewColumn x:Name="Passport" Header="Паспортные данные"  Width ="240"
+                                        DisplayMemberBinding="{Binding SeriesAndPassportNumber}"/>
                         <GridViewColumn Header="Телефон"
-                                        DisplayMemberBinding="{Binding Path = Telefon}"/>
+                                        DisplayMemberBinding="{Binding Telefon}"/>
                         <GridViewColumn Header="Дата и время" 
-                                        DisplayMemberBinding="{Binding Path=DateOfEntry, StringFormat= g}"/>
+                                        DisplayMemberBinding="{Binding DateOfEntry, StringFormat=g}"/>
                         <GridViewColumn Header="Изм." 
                                         CellTemplate="{StaticResource CheckBox_Changed}"/>
                     </GridView>
@@ -140,8 +197,7 @@
             </ListView>
         </Grid>
 
-        <StatusBar Grid.Row="3" Grid.ColumnSpan="3
-                   " Background="#FF679CC9">
+        <StatusBar Grid.Row="3" Grid.ColumnSpan="3                    " Background="#FF679CC9">
             <StatusBarItem>
                 <materialDesign:PackIcon Kind="Lightbulb" Width="20" 
                                              Height="20" Margin="5,0"
@@ -177,11 +233,7 @@
                            VerticalAlignment="Bottom"/>
                 <TextBox x:Name="EditName_TextBox" 
                          FontSize="18" Width="135"
-                         Text="{Binding ElementName=DataClients, 
-                                 Path=SelectedItem.FirstName,
-                                 ValidatesOnDataErrors=True,
-                                 UpdateSourceTrigger=PropertyChanged, 
-                                 Mode=OneWay}"
+                         Text="{Binding SelectedItem.FirstName, ElementName=DataClients, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                          Grid.Column="0" Grid.Row="1"
                          HorizontalAlignment="Center" 
                          VerticalAlignment="Center"/>
@@ -189,8 +241,10 @@
                         Grid.Column="2" Grid.Row="1"
                         Background="Black" 
                         BorderBrush="{x:Null}"
-                        Cursor="Hand" 
-                        Click="EditName_Button_Clik">
+                        Cursor="Hand"
+                        Command="{Binding EditNameCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
+                        CommandParameter="{Binding SelectedItem, ElementName=DataClients}">
+
                     <materialDesign:PackIcon Kind="Edit" Width="25" 
                                              Height="25" 
                                              HorizontalAlignment="Center"/>
@@ -213,11 +267,7 @@
                            Grid.ColumnSpan="3" HorizontalAlignment="Center" 
                            VerticalAlignment="Bottom"/>
                 <TextBox x:Name="EditMiddleName_TextBox" FontSize="18" Width="135"
-                         Text="{Binding ElementName=DataClients, 
-                                 Path=SelectedItem.MiddleName,
-                                 ValidatesOnDataErrors=True,
-                                 UpdateSourceTrigger=PropertyChanged,
-                                 Mode=OneWay}"
+                         Text="{Binding SelectedItem.MiddleName, ElementName=DataClients, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                          Grid.Column="0" Grid.Row="1"
                          HorizontalAlignment="Center" 
                          VerticalAlignment="Center" 
@@ -227,7 +277,9 @@
                         Background="Black" 
                         BorderBrush="{x:Null}"
                         Cursor="Hand"
-                        Click="EditMiddleName_Button_Clik">
+                        Command="{Binding EditMiddleNameCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
+                        CommandParameter="{Binding SelectedItem, ElementName=DataClients}">
+
                     <materialDesign:PackIcon Kind="Edit" Width="25" 
                                              Height="25" 
                                              HorizontalAlignment="Center"/>
@@ -250,11 +302,7 @@
                            Grid.ColumnSpan="3" HorizontalAlignment="Center" 
                            VerticalAlignment="Bottom"/>
                 <TextBox x:Name="EditSecondName_TextBox" FontSize="18" Width="135"
-                         Text="{Binding ElementName=DataClients, 
-                                 Path=SelectedItem.SecondName, 
-                                 ValidatesOnDataErrors=True,
-                                 UpdateSourceTrigger=PropertyChanged,
-                                 Mode=OneWay}"
+                         Text="{Binding SelectedItem.SecondName, ElementName=DataClients, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                          Grid.Column="0" Grid.Row="1"
                          HorizontalAlignment="Center" 
                          VerticalAlignment="Center"/>
@@ -262,8 +310,10 @@
                         Grid.Column="2" Grid.Row="1"
                         Background="Black" 
                         BorderBrush="{x:Null}"
-                        Cursor="Hand" 
-                        Click="EditSecondName_Button_Clik">
+                        Cursor="Hand"
+                        Command="{Binding EditSecondNameCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
+                        CommandParameter="{Binding SelectedItem, ElementName=DataClients}">
+
                     <materialDesign:PackIcon Kind="Edit" Width="25" 
                                              Height="25" 
                                              HorizontalAlignment="Center"/>
@@ -288,11 +338,7 @@
                 <TextBox x:Name="EditSeriesAndPassportNumber_TextBox" 
                          FontSize="18"
                          Width="135"
-                         Text="{Binding ElementName=DataClients, 
-                                Path=SelectedItem.SeriesAndPassportNumber,
-                                ValidatesOnDataErrors=True,
-                                UpdateSourceTrigger=PropertyChanged,
-                                Mode=OneWay}"
+                         Text="{Binding SelectedItem.SeriesAndPassportNumber, ElementName=DataClients, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                          Grid.Column="0" Grid.Row="1"
                          HorizontalAlignment="Center" 
                          VerticalAlignment="Center" Cursor="Arrow"/>
@@ -301,7 +347,9 @@
                         Background="Black" 
                         BorderBrush="{x:Null}"
                         Cursor="Hand"
-                        Click="EditSeriesAndPassportNumber_Button_Clik">
+                        Command="{Binding EditSeriesAndPassportNumberCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
+                        CommandParameter="{Binding SelectedItem, ElementName=DataClients}">
+
                     <materialDesign:PackIcon Kind="Edit" Width="25" 
                                              Height="25" 
                                              HorizontalAlignment="Center"/>
@@ -326,20 +374,32 @@
 
                 <TextBox x:Name="EditTelefon_TextBox"
                          FontSize="18" Width="135"
-                         Text="{Binding ElementName=DataClients, 
-                                Path=SelectedItem.Telefon, 
-                                ValidatesOnDataErrors=True,
-                                UpdateSourceTrigger=PropertyChanged,
-                                Mode=OneWay}"
+                         Text="{Binding SelectedItem.Telefon, ElementName=DataClients, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                          Grid.Column="0" Grid.Row="1"
                          HorizontalAlignment="Center" 
                          VerticalAlignment="Center" Cursor="Arrow"/>
+
                 <Button x:Name="ManagerEditTelefon_Button" 
                         Grid.Column="2" Grid.Row="1"
                         Background="Black" 
                         BorderBrush="{x:Null}"
-                        Click="EditTelefon_Button"
-                        Cursor="Hand">
+                        Cursor="Hand"
+                        Command="{Binding EditTelefonCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
+                        CommandParameter="{Binding SelectedItem, ElementName=DataClients}">
+
+                    <!--<Button.CommandParameter>
+                        <MultiBinding Converter ="{StaticResource CommandConvert}">
+                            <MultiBinding.Bindings>
+                                <Binding Path="Text" ElementName="EditTelefon_TextBox"/>
+                                <Binding Path="SelectedItem" ElementName="DataClients"/>
+                                -->
+                    <!--<Binding Path="SelectedIndex" ElementName="AccessLevel_ComboBox"/>-->
+                    <!--<Binding Path="ItemsSource" ElementName="DataClients"/>-->
+                    <!--
+                            </MultiBinding.Bindings>
+                        </MultiBinding>
+                    </Button.CommandParameter>-->
+
                     <materialDesign:PackIcon Kind="Edit" Width="25" 
                                              Height="25" 
                                              HorizontalAlignment="Center"/>
@@ -379,7 +439,15 @@
 
                 <Button x:Name="Save_Button" ToolTip="Coхранить данные"
                 Background="{x:Null}" BorderBrush="{x:Null}"
-                Cursor="Hand" HorizontalAlignment="Left" Command="ApplicationCommands.Save">
+                Cursor="Hand" HorizontalAlignment="Left"
+                        
+                    Command="{Binding SaveCommand, 
+                    RelativeSource={RelativeSource AncestorType={x:Type Window}, 
+                    Mode=FindAncestor}}"
+                        
+                    CommandParameter="{Binding ItemsSource, ElementName=DataClients}">
+
+
                     <materialDesign:PackIcon Kind="Floppy" 
                                      Width="25" Height="25" HorizontalAlignment="Center" 
                                      Cursor="Hand" Foreground="#DD080808"/>
@@ -388,7 +456,9 @@
                 <Button x:Name="NewClient_Button" ToolTip="Добавить нового клиента"
                         Background="{x:Null}" BorderBrush="{x:Null}"
                         Cursor="Hand" HorizontalAlignment="Left"
-                        Click="NewClient_Button_Click">
+                        Command="{Binding NewClientAddCommand, 
+                        RelativeSource={RelativeSource AncestorType=Window, 
+                        Mode=FindAncestor}}">
                     <materialDesign:PackIcon Kind="PlusBox" 
                                      Width="25" Height="25" HorizontalAlignment="Center" 
                                      Cursor="Hand" Foreground="#DD080808"/>
@@ -396,8 +466,22 @@
 
                 <Button x:Name="Sort_Button" ToolTip="Coртировать по алфавиту"
                 Background="{x:Null}" BorderBrush="{x:Null}"
-                Cursor="Hand" HorizontalAlignment="Left">
+                Cursor="Hand" HorizontalAlignment="Left" 
+                    Click="Sort_Button_Click">
                     <materialDesign:PackIcon Kind="SortAlphabeticalDescending" 
+                                     Width="25" Height="25" HorizontalAlignment="Center" 
+                                     Cursor="Hand" Foreground="#DD080808"/>
+                </Button>
+
+                <Button x:Name="DelitClient_Button" ToolTip="Удалить клиента"
+                Background="{x:Null}" BorderBrush="{x:Null}"
+                Cursor="Hand" HorizontalAlignment="Left" 
+                    Command="{Binding DeleteClientCommand, 
+                    RelativeSource={RelativeSource AncestorType=Window, 
+                    Mode=FindAncestor}}"
+                    CommandParameter="{Binding ElementName=DataClients, 
+                    Path= SelectedItem}">
+                    <materialDesign:PackIcon Kind="Delete" 
                                      Width="25" Height="25" HorizontalAlignment="Center" 
                                      Cursor="Hand" Foreground="#DD080808"/>
                 </Button>

@@ -12,6 +12,6 @@ namespace Modul_12.Interfases
     {
         ObservableCollection<Client> ViewClientsData(ObservableCollection<Client>clients);
 
-        Client EditeClient(Client client, string newData);
+        Client EditeTelefonClient( string newData, Client client);
     }
 }

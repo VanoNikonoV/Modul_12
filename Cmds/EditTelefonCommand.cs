@@ -1,26 +1,53 @@
 ﻿
+using Modul_12.Models;
+using Modul_12.ViewModels;
 using System;
 
 namespace Modul_12.Cmds
 {
     internal class EditTelefonCommand : CommandBase
     {
-        public override bool CanExecute(object parameter) => true; //(parameter as string) != null; 
+        public MainWindowViewModel ViewModel { get; set; } = new MainWindowViewModel();
+
+        public override bool CanExecute(object parameter)
+        {
+            return true;
+            //Tuple<string, Client> tuple = parameter as Tuple<string, Client>;
+
+            //string newNumber = tuple.Item1;
+
+            //Client _client = tuple.Item2;
+
+            //if (newNumber.Length == 0)
+            //{
+            //    return false;
+            //}
+
+            //else return true;
+        }
 
         public override void Execute(object parameter)
         {
-            var values = parameter; //(Tuple<string, Client>)
+            Tuple<string, Client, Clients, int> tuple = parameter as Tuple<string, Client, Clients, int>;
 
-            //string newNumber = values.Item1;
+            string newNumber = tuple.Item1;
 
-            //Client _client = values.Item2;
+            Client client = tuple.Item2;
 
-            //bool flag = !String.IsNullOrWhiteSpace(newNumber);
+            Clients clients = tuple.Item3;
 
-            //if (newNumber.Length == 11 && flag)
-            //{
-            //    _clients.EditClient(_clients.IndexOf(client), _consultant.ChangeTelefonClient(client, newNumber));
-            //}
+            bool flag = !String.IsNullOrWhiteSpace(newNumber);
+
+            Clients Clients = ViewModel.Clients;
+
+            Consultant consultant = ViewModel.Consultant;
+
+            if (newNumber.Length == 11 && flag)
+            {
+                int x = clients.IndexOf(client);
+
+                Clients.EditClient(x, consultant.EditeTelefonClient(newNumber, client));
+            }
             //else ShowStatusBarText("Номер долже содержать 11 символов");
         }
     }
