@@ -46,7 +46,8 @@ namespace Modul_12
             editSeriesAndPassportNumberCommand ?? (editSeriesAndPassportNumberCommand 
             = new RelayCommand<Client>(EditSeriesAndPassportNumber, CanEdit));
 
-
+        private RelayCommand newClientAdd = null;
+        public RelayCommand NewClientAdd => newClientAdd ?? (newClientAdd = new RelayCommand(NewClient, CanAddClient));
         #endregion
 
         public MainWindow()
@@ -54,9 +55,6 @@ namespace Modul_12
             ViewModel = ViewModel ?? new MainWindowViewModel();
 
             InitializeComponent();
-
-            //Сокрытие не функциональных кнопок
-            NewClient_Button.IsEnabled = false;
         }
 
         /// <summary>
@@ -99,21 +97,11 @@ namespace Modul_12
             {
                 case 0: //консультант
 
-                    #region Сокрытие не функциональных кнопок
-
-                    NewClient_Button.IsEnabled = false;
-
-                    #endregion
-
                     DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.Clients.Clone());
-                    
-
+ 
                     break;
 
                 case 1: //менждер
-
-
-                    NewClient_Button.IsEnabled = true;
 
                     DataClients.ItemsSource = ViewModel.Meneger.ViewClientsData(ViewModel.Clients);
 
@@ -179,6 +167,13 @@ namespace Modul_12
         private bool CanEdit(Client client)
         {
             if (client != null && AccessLevel_ComboBox.SelectedIndex == 1) { return true; }
+
+            return false;
+        }
+
+        private bool CanAddClient()
+        {
+            if (AccessLevel_ComboBox.SelectedIndex == 1) { return true; }
 
             return false;
         }
@@ -254,9 +249,7 @@ namespace Modul_12
         /// <summary>
         /// Метод добавления нового клиенита
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void NewClient_Button_Click(object sender, RoutedEventArgs e)
+        private void NewClient( )
         {
             NewClientWindow _windowNewClient = new NewClientWindow();
 
@@ -288,6 +281,11 @@ namespace Modul_12
             ListChanges_Label.Visibility = Visibility.Collapsed;
         }
 
+        /// <summary>
+        /// Производит сортировку по алфавиту по имени клиента
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Sort_Button_Click(object sender, RoutedEventArgs e)
         {
             ICollectionView collectionView = CollectionViewSource.GetDefaultView(DataClients.ItemsSource);
@@ -297,9 +295,5 @@ namespace Modul_12
             DataClients.ItemsSource = collectionView;
         }
 
-        private bool Filter(Client client)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

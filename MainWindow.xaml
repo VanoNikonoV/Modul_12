@@ -168,12 +168,12 @@
 
         <!--Основная рабочая область-->
         <Grid Grid.Row="1" Grid.Column="1"  Background="White" Cursor="IBeam" Margin="15,15,0,15">
-
+            
             <Grid.Effect>
                 <DropShadowEffect BlurRadius="200" ShadowDepth="10"/>
             </Grid.Effect>
 
-            <ListView x:Name="DataClients" FontSize="18" Cursor="IBeam"
+            <ListView x:Name="DataClients" FontSize="18" Cursor="IBeam" 
                       SelectionChanged="ClientViewSelection" Grid.ColumnSpan="2">
                 <ListView.View>
                     <GridView>
@@ -442,9 +442,11 @@
                 Background="{x:Null}" BorderBrush="{x:Null}"
                 Cursor="Hand" HorizontalAlignment="Left"
                         
-                        Command="{Binding SaveCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
+                    Command="{Binding SaveCommand, 
+                    RelativeSource={RelativeSource AncestorType={x:Type Window}, 
+                    Mode=FindAncestor}}"
                         
-                        CommandParameter="{Binding ItemsSource, ElementName=DataClients}">
+                    CommandParameter="{Binding ItemsSource, ElementName=DataClients}">
 
 
                     <materialDesign:PackIcon Kind="Floppy" 
@@ -455,7 +457,9 @@
                 <Button x:Name="NewClient_Button" ToolTip="Добавить нового клиента"
                         Background="{x:Null}" BorderBrush="{x:Null}"
                         Cursor="Hand" HorizontalAlignment="Left"
-                        Click="NewClient_Button_Click">
+                        Command="{Binding NewClientAdd, 
+                        RelativeSource={RelativeSource AncestorType=Window, 
+                        Mode=FindAncestor}}">
                     <materialDesign:PackIcon Kind="PlusBox" 
                                      Width="25" Height="25" HorizontalAlignment="Center" 
                                      Cursor="Hand" Foreground="#DD080808"/>
@@ -463,7 +467,8 @@
 
                 <Button x:Name="Sort_Button" ToolTip="Coртировать по алфавиту"
                 Background="{x:Null}" BorderBrush="{x:Null}"
-                Cursor="Hand" HorizontalAlignment="Left" Click="Sort_Button_Click">
+                Cursor="Hand" HorizontalAlignment="Left" 
+                    Click="Sort_Button_Click">
                     <materialDesign:PackIcon Kind="SortAlphabeticalDescending" 
                                      Width="25" Height="25" HorizontalAlignment="Center" 
                                      Cursor="Hand" Foreground="#DD080808"/>
