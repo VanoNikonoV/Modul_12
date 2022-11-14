@@ -127,8 +127,7 @@
             </Label.LayoutTransform>
         </Label>
 
-        <Grid x:Name="СhangesGride" Grid.Row="1" Grid.Column="2" 
-              IsSharedSizeScope="True"  >
+        <Grid x:Name="СhangesGride" Grid.Row="1" Grid.Column="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>

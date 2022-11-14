@@ -307,6 +307,8 @@ namespace Modul_12
         private void DeleteClient(Client client)
         {
             ViewModel.Clients.Remove(client);
+
+
         }
 
     }
