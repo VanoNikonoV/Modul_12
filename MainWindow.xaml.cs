@@ -24,9 +24,6 @@ namespace Modul_12
         private bool isDirty = false;
 
         #region Команды
-        //private ICommand _saveCommand = null;
-        //public ICommand SaveCommand => _saveCommand ?? (_saveCommand = new SaveCommand());
-
 
         private RelayCommand<Client> _editTelefonCommand = null;
         public RelayCommand<Client> EditTelefonCommand
@@ -171,11 +168,9 @@ namespace Modul_12
                     default:
                         break;
                 }
-
                 isDirty = true;
 
             }
-
             else { ShowStatusBarText("Исправте не корректные данные"); }
 
         }
@@ -320,8 +315,6 @@ namespace Modul_12
         /// <param name="e"></param>
         private void Sort_Button_Click(object sender, RoutedEventArgs e)
         {
-            //ICollectionView collectionView = CollectionViewSource.GetDefaultView(DataClients.ItemsSource);
-
             collectionView.SortDescriptions.Add(new SortDescription("FirstName", ListSortDirection.Ascending));
 
             DataClients.ItemsSource = collectionView;
@@ -361,14 +354,14 @@ namespace Modul_12
                         sw.WriteLine(emp.ToString());
                     }
                 }
-            }
 
-            foreach (var client in ViewModel.ClientsRepository)
-            {
-                client.IsChanged = false;
+                foreach (var client in ViewModel.ClientsRepository)
+                {
+                    client.IsChanged = false;
+                }
+                isDirty = false;
             }
             
-            isDirty = false;
         }
     }
 }

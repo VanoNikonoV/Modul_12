@@ -393,19 +393,6 @@
                         Command="{Binding EditTelefonCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
                         CommandParameter="{Binding SelectedItem, ElementName=DataClients}">
 
-                    <!--<Button.CommandParameter>
-                        <MultiBinding Converter ="{StaticResource CommandConvert}">
-                            <MultiBinding.Bindings>
-                                <Binding Path="Text" ElementName="EditTelefon_TextBox"/>
-                                <Binding Path="SelectedItem" ElementName="DataClients"/>
-                                -->
-                    <!--<Binding Path="SelectedIndex" ElementName="AccessLevel_ComboBox"/>-->
-                    <!--<Binding Path="ItemsSource" ElementName="DataClients"/>-->
-                    <!--
-                            </MultiBinding.Bindings>
-                        </MultiBinding>
-                    </Button.CommandParameter>-->
-
                     <materialDesign:PackIcon Kind="Edit" Width="25" 
                                              Height="25" 
                                              HorizontalAlignment="Center"/>
@@ -447,11 +434,6 @@
                 Background="{x:Null}" BorderBrush="{x:Null}"
                 Cursor="Hand" HorizontalAlignment="Left"
                 Command="ApplicationCommands.Save">
-                        
-                    <!--Command="{Binding SaveCommand, 
-                    RelativeSource={RelativeSource AncestorType={x:Type Window}, 
-                    Mode=FindAncestor}}"
-                    CommandParameter="{Binding ItemsSource, ElementName=DataClients}">-->
 
                     <materialDesign:PackIcon Kind="Floppy" 
                                      Width="25" Height="25" HorizontalAlignment="Center" 
