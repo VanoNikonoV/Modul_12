@@ -68,7 +68,7 @@ namespace Modul_12
 
             InitializeComponent();
 
-            collectionView = CollectionViewSource.GetDefaultView(ViewModel.Clients);
+            collectionView = CollectionViewSource.GetDefaultView(ViewModel.ClientsRepository);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Modul_12
             {
                 case 0: //консультант
 
-                    DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.Clients);//.Clone()
+                    DataClients.ItemsSource = ViewModel.Consultant.ViewClientsData(ViewModel.ClientsRepository);//.Clone()
 
                     break;
 
@@ -119,7 +119,7 @@ namespace Modul_12
 
                     collectionView.SortDescriptions.Clear();
 
-                    DataClients.ItemsSource = ViewModel.Meneger.ViewClientsData(ViewModel.Clients);
+                    DataClients.ItemsSource = ViewModel.Meneger.ViewClientsData(ViewModel.ClientsRepository);
 
                     break;
 
@@ -150,7 +150,7 @@ namespace Modul_12
             if (client.Error == String.Empty)
             {
                 //изменения в коллекции банка, по ID клиента
-                Client editClient = ViewModel.Clients.First(i => i.ID == client.ID);
+                Client editClient = ViewModel.ClientsRepository.First(i => i.ID == client.ID);
 
                 editClient.Telefon = EditTelefon_TextBox.Text.Trim();
 
@@ -204,7 +204,9 @@ namespace Modul_12
             {
                 Client changedClient = ViewModel.Meneger.EditNameClient(client, EditName_TextBox.Text.Trim());
 
-                ViewModel.ReplaceClient(client, changedClient);
+                int index = ViewModel.ClientsRepository.IndexOf(client);
+
+                ViewModel.ClientsRepository.ReplaceClient(index, changedClient);
 
                 isDirty = true;
             }
@@ -221,7 +223,9 @@ namespace Modul_12
             {
                 Client changedClient = ViewModel.Meneger.EditMiddleNameClient(client, EditMiddleName_TextBox.Text.Trim());
 
-                ViewModel.ReplaceClient(client, changedClient);
+                int index = ViewModel.ClientsRepository.IndexOf(client);
+
+                ViewModel.ClientsRepository.ReplaceClient(index, changedClient);
 
                 isDirty = true;
             }
@@ -234,7 +238,9 @@ namespace Modul_12
             {
                 Client changedClient = ViewModel.Meneger.EditSecondNameClient(client, EditSecondName_TextBox.Text.Trim());
 
-                ViewModel.ReplaceClient(client, changedClient);
+                int index = ViewModel.ClientsRepository.IndexOf(client);
+
+                ViewModel.ClientsRepository.ReplaceClient(index, changedClient);
 
                 isDirty = true;
             }
@@ -247,7 +253,9 @@ namespace Modul_12
             {
                 Client changedClient = ViewModel.Meneger.EditSeriesAndPassportNumberClient(client, EditSeriesAndPassportNumber_TextBox.Text.Trim());
 
-                ViewModel.ReplaceClient(client, changedClient);
+                int index = ViewModel.ClientsRepository.IndexOf(client);
+
+                ViewModel.ClientsRepository.ReplaceClient(index, changedClient);
 
                 isDirty = true;
             }
@@ -283,9 +291,7 @@ namespace Modul_12
 
             if (_windowNewClient.DialogResult == true)
             {
-                ViewModel.AddClient(_windowNewClient.NewClient);
-                
-                ViewModel.Clients.Add(_windowNewClient.NewClient);
+                ViewModel.ClientsRepository.Add(_windowNewClient.NewClient);
 
                 isDirty = true;
             }
@@ -327,9 +333,42 @@ namespace Modul_12
         /// <param name="client">Удаляемый клиент</param>
         private void DeleteClient(Client client)
         {
-            ViewModel.Clients.Remove(client);
+            ViewModel.ClientsRepository.Remove(client);
         }
 
+        private void SaveCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (isDirty)
+            {
+                e.CanExecute = true;
+            }
+            else e.CanExecute = false;
+
+        }
+
+        private void SaveExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            var saveDlg = new SaveFileDialog { Filter = "Text files|*.csv" };
+
+            if (true == saveDlg.ShowDialog())
+            {
+                string fileName = saveDlg.FileName;
+
+                using (StreamWriter sw = new StreamWriter(fileName, false, Encoding.Unicode))
+                {
+                    foreach (var emp in DataClients.ItemsSource)
+                    {
+                        sw.WriteLine(emp.ToString());
+                    }
+                }
+            }
+
+            foreach (var client in ViewModel.ClientsRepository)
+            {
+                client.IsChanged = false;
+            }
+            
+            isDirty = false;
         }
     }
 }

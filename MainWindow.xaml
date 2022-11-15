@@ -446,14 +446,12 @@
                 <Button x:Name="Save_Button" ToolTip="Coхранить данные"
                 Background="{x:Null}" BorderBrush="{x:Null}"
                 Cursor="Hand" HorizontalAlignment="Left"
-                        Command="ApplicationCommands.Save">
+                Command="ApplicationCommands.Save">
                         
                     <!--Command="{Binding SaveCommand, 
                     RelativeSource={RelativeSource AncestorType={x:Type Window}, 
                     Mode=FindAncestor}}"
-                        
                     CommandParameter="{Binding ItemsSource, ElementName=DataClients}">-->
-
 
                     <materialDesign:PackIcon Kind="Floppy" 
                                      Width="25" Height="25" HorizontalAlignment="Center" 

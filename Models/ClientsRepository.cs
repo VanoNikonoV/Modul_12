@@ -7,17 +7,11 @@ using System.Windows;
 
 namespace Modul_12.Models
 {
-    public class ClientsRepository
+    public class ClientsRepository: ObservableCollection<Client>
     {
-        readonly List<Client> clients;
-
-        public List<Client> GetClients() { return clients; }
-
         public ClientsRepository(string path = "data.csv")  
         {
-            clients = LoadData(path);
-
-            //clients = new List<Client>();
+            LoadData(path);
                 
             //GetClientsRep(100);
         }
@@ -27,26 +21,15 @@ namespace Modul_12.Models
         /// </summary>
         /// <param name="curent">Редактируемый клиент</param>
         /// <param name="editClient">Отредактированный клиент</param>
-        public void ReplaceClient(Client curent, Client editClient) //EditeClient
-        {
-            int index = clients.IndexOf(curent);
+        public void ReplaceClient(int index, Client editClient) { SetItem(index, editClient);}
 
-            clients.RemoveAt(index);
-
-            clients.Insert(index, editClient);
-        }
-
-        public void AddClient(Client newClient)
-        {
-            clients.Add(newClient);
-        }
-
+ 
         /// <summary>
         /// Загружает данные о клиентах из файла data.csv
         /// </summary>
         /// <param name="path">Путь к файлу</param>
         /// <returns></returns>
-        private List<Client> LoadData(string path)
+        private void LoadData(string path)
         {
             List<Client> tempClients = new List<Client>();
             
@@ -58,7 +41,7 @@ namespace Modul_12.Models
                     {
                         string[] line = reader.ReadLine().Split('\t');
 
-                        tempClients.Add(new Client(firstName: line[1],
+                        this.Add(new Client(firstName: line[1],
                                             middleName: line[2],
                                             secondName: line[3],
                                                 telefon: line[4],
@@ -76,7 +59,6 @@ namespace Modul_12.Models
                 icon: MessageBoxImage.Error);
             }
 
-            return tempClients;
 
         }
 
@@ -94,7 +76,7 @@ namespace Modul_12.Models
 
                 passport += random.Next(1, 500);
 
-                clients.Add(new Client(firstNames[ClientsRepository.randomize.Next(ClientsRepository.firstNames.Length)],
+                this.Add(new Client(firstNames[ClientsRepository.randomize.Next(ClientsRepository.firstNames.Length)],
                     middleNames[ClientsRepository.randomize.Next(ClientsRepository.middleNames.Length)],
                     secondNames[ClientsRepository.randomize.Next(ClientsRepository.secondNames.Length)], 
                     telefon.ToString(), 

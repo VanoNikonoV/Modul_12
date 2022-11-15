@@ -10,9 +10,7 @@ namespace Modul_12.ViewModels
 {
     public class MainWindowViewModel
     {
-        readonly ClientsRepository clientRepository;
-
-        public ObservableCollection<Client> Clients { get; set; }
+        public ClientsRepository ClientsRepository { get; set; }
 
         public Consultant Consultant { get; set; }
 
@@ -20,24 +18,14 @@ namespace Modul_12.ViewModels
 
         public MainWindowViewModel()
         {
-            this.clientRepository = new ClientsRepository("data.csv"); 
-
-            Clients = new ObservableCollection<Client>(clientRepository.GetClients());
+            ClientsRepository = new ClientsRepository("data.csv"); 
 
             Consultant = new Consultant();
 
             Meneger = new Meneger();
         }
 
-        public void ReplaceClient(Client curent, Client editClient)
-        {
-            this.clientRepository.ReplaceClient(curent, editClient);
-        }
-
-        public void AddClient(Client newClient)
-        { 
-            this.clientRepository.AddClient(newClient);
-        }
+       
 
 
     }
